@@ -1,31 +1,23 @@
 
 import streamlit as st
 
-# ==========================================
-# KONFIGURASI HALAMAN
-# ==========================================
+# =====================================
+# 1. KONFIGURASI HALAMAN
+# =====================================
 
 st.set_page_config(
     page_title="Sistem Audit COBIT 5",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ==========================================
-# SESSION STATE
-# ==========================================
-
-if "menu" not in st.session_state:
-    st.session_state.menu = "Dashboard"
-
-
-# ==========================================
-# CSS / DESAIN
-# ==========================================
+# =====================================
+# 2. DESAIN WEBSITE
+# =====================================
 
 st.markdown("""
 <style>
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 html, body, [class*="css"] {
@@ -33,19 +25,10 @@ html, body, [class*="css"] {
 }
 
 .stApp {
-    background: linear-gradient(
-        135deg,
-        #FFF9FB 0%,
-        #FCEAF0 50%,
-        #F8DCE6 100%
-    );
+    background: linear-gradient(135deg, #FFF9FB, #FCEAF0, #F8DCE6);
 }
 
-/* Area utama */
-[data-testid="stAppViewContainer"] {
-    background: transparent;
-}
-
+[data-testid="stAppViewContainer"],
 [data-testid="stMain"] {
     background: transparent;
 }
@@ -57,11 +40,7 @@ html, body, [class*="css"] {
 
 /* Sidebar */
 [data-testid="stSidebar"] {
-    background: linear-gradient(
-        180deg,
-        #F9DCE6 0%,
-        #F2C4D5 100%
-    );
+    background: linear-gradient(180deg, #F9DCE6, #F2C4D5);
 }
 
 [data-testid="stSidebar"] * {
@@ -75,71 +54,60 @@ h1, h2, h3 {
     font-family: 'Poppins', sans-serif;
 }
 
-/* Paragraf */
+/* Teks */
 p, label {
     color: #80586B;
-    font-family: 'Poppins', sans-serif;
 }
 
-/* Card umum */
-.info-card {
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid #F2C6D6;
-    border-radius: 15px;
-    padding: 22px;
-    box-shadow: 0 4px 12px rgba(144, 86, 111, 0.07);
-    min-height: 115px;
-}
-
-.info-card h4 {
-    color: #A66C85;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 10px;
-}
-
-.info-card h2 {
-    color: #90566F;
-    font-size: 25px;
-    margin: 0;
-}
-
-/* Card Objek Audit */
-.object-card {
-    background: linear-gradient(
-        135deg,
-        #FFF5F8,
-        #FCE4EC
-    );
+/* Card */
+.audit-card {
+    background: linear-gradient(135deg, #FFF5F8, #FCE4EC);
     border: 1px solid #F2C6D6;
     border-radius: 16px;
-    padding: 28px 32px;
+    padding: 25px 30px;
+    margin: 15px 0;
     box-shadow: 0 4px 12px rgba(144, 86, 111, 0.08);
-    margin-top: 15px;
 }
 
-.object-card h3 {
+.audit-card h3 {
     color: #90566F;
-    font-size: 23px;
     margin-top: 0;
-    margin-bottom: 20px;
+    font-size: 22px;
 }
 
-.object-card p,
-.object-card li {
+.audit-card p,
+.audit-card li {
     color: #80586B;
     font-size: 14px;
     line-height: 1.9;
 }
 
-.object-card ul {
+.audit-card ul {
     padding-left: 22px;
-    margin-bottom: 0;
 }
 
-/* Card domain */
+.info-card {
+    background: rgba(255,255,255,0.75);
+    border: 1px solid #F2C6D6;
+    border-radius: 14px;
+    padding: 22px;
+    min-height: 115px;
+    box-shadow: 0 4px 12px rgba(144, 86, 111, 0.06);
+}
+
+.info-card p {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #A66C85;
+}
+
+.info-card h3 {
+    margin: 0;
+    font-size: 22px;
+}
+
 .domain-card {
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255,255,255,0.75);
     border: 1px solid #F2C6D6;
     border-radius: 12px;
     padding: 18px;
@@ -149,69 +117,81 @@ p, label {
 
 .domain-card h4 {
     color: #90566F;
-    font-size: 15px;
-    margin-bottom: 5px;
+    margin: 0 0 7px 0;
 }
 
 .domain-card p {
-    color: #80586B;
     font-size: 12px;
     margin: 0;
 }
 
 /* Tombol */
 .stButton > button {
-    background-color: #DFA6BC;
+    background: #DFA6BC;
     color: white;
     border: none;
-    border-radius: 10px;
-    padding: 8px 18px;
+    border-radius: 9px;
     font-family: 'Poppins', sans-serif;
 }
 
 .stButton > button:hover {
-    background-color: #C987A3;
+    background: #C987A3;
     color: white;
     border: none;
 }
 
 /* Input */
 .stTextInput input,
-.stTextArea textarea,
-.stSelectbox div[data-baseweb="select"] {
+.stTextArea textarea {
     border-radius: 9px;
 }
 
 hr {
     border-color: #EBC6D5;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
 
-# ==========================================
-# SIDEBAR / MENU
-# ==========================================
+# =====================================
+# 3. SESSION STATE
+# =====================================
+
+if "menu" not in st.session_state:
+    st.session_state.menu = "Dashboard"
+
+if "hasil_kuesioner" not in st.session_state:
+    st.session_state.hasil_kuesioner = []
+
+
+# =====================================
+# 4. FUNGSI CARD
+# =====================================
+
+def tampilkan_card(judul, isi):
+    st.markdown(
+        f"""
+        <div class="audit-card">
+            <h3>{judul}</h3>
+            <p>{isi}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+# =====================================
+# 5. SIDEBAR
+# =====================================
 
 with st.sidebar:
 
     st.markdown("""
-    <div style="padding: 15px 5px 25px 5px;">
-        <h2 style="
-            color: #90566F;
-            font-size: 27px;
-            margin-bottom: 0;
-        ">
+    <div style="padding: 15px 5px 20px 5px;">
+        <h2 style="color:#90566F; margin-bottom:0;">
             COBIT 5
         </h2>
-
-        <p style="
-            color: #80586B;
-            font-size: 12px;
-            letter-spacing: 2px;
-            margin-top: 3px;
-        ">
+        <p style="font-size:12px; letter-spacing:2px;">
             AUDIT SYSTEM
         </p>
     </div>
@@ -219,7 +199,7 @@ with st.sidebar:
 
     st.markdown("---")
 
-    menu_list = [
+    daftar_menu = [
         "Dashboard",
         "Profil Perusahaan",
         "Kuesioner Audit",
@@ -227,111 +207,63 @@ with st.sidebar:
         "Rekomendasi"
     ]
 
-    for item in menu_list:
+    for menu_item in daftar_menu:
         if st.button(
-            item,
-            key="menu_" + item,
+            menu_item,
+            key="pilih_" + menu_item,
             use_container_width=True
         ):
-            st.session_state.menu = item
+            st.session_state.menu = menu_item
             st.rerun()
 
     st.markdown("---")
 
-    st.markdown("""
-    <p style="
-        font-size: 11px;
-        text-align: center;
-        color: #80586B;
-    ">
-        Sistem Audit Berbasis COBIT 5
-    </p>
-    """, unsafe_allow_html=True)
+    st.caption("Sistem Audit Berbasis COBIT 5")
 
 
-# ==========================================
-# FUNGSI CARD INFORMASI
-# ==========================================
-
-def show_notice(title, description):
-
-    st.markdown(f"""
-    <div style="
-        background: rgba(255,255,255,0.75);
-        border: 1px solid #F2C6D6;
-        border-radius: 15px;
-        padding: 25px;
-        margin-top: 15px;
-    ">
-        <h3 style="
-            color: #90566F;
-            margin-top: 0;
-        ">
-            {title}
-        </h3>
-
-        <p style="
-            color: #80586B;
-            line-height: 1.8;
-            margin-bottom: 0;
-        ">
-            {description}
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# ==========================================
-# DASHBOARD
-# ==========================================
+# =====================================
+# 6. HALAMAN DASHBOARD
+# =====================================
 
 if st.session_state.menu == "Dashboard":
 
     st.title("Dashboard Audit COBIT 5")
 
-    st.markdown("""
-    <p style="
-        color: #80586B;
-        font-size: 15px;
-        margin-top: -10px;
-    ">
-        Sistem Evaluasi Aplikasi Persediaan dan Penjualan
-    </p>
-    """, unsafe_allow_html=True)
+    st.write(
+        "Sistem Evaluasi Aplikasi Persediaan dan Penjualan"
+    )
 
-    st.markdown("---")
+    st.divider()
 
-    # Ringkasan informasi
-    col1, col2, col3 = st.columns(3)
+    kolom1, kolom2, kolom3 = st.columns(3)
 
-    with col1:
+    with kolom1:
         st.markdown("""
         <div class="info-card">
-            <h4>Standar Audit</h4>
-            <h2>COBIT 5</h2>
+            <p>Standar Audit</p>
+            <h3>COBIT 5</h3>
         </div>
         """, unsafe_allow_html=True)
 
-    with col2:
+    with kolom2:
         st.markdown("""
         <div class="info-card">
-            <h4>Objek Evaluasi</h4>
-            <h2>Aplikasi</h2>
+            <p>Objek Evaluasi</p>
+            <h3>Aplikasi</h3>
         </div>
         """, unsafe_allow_html=True)
 
-    with col3:
+    with kolom3:
         st.markdown("""
         <div class="info-card">
-            <h4>Metode Evaluasi</h4>
-            <h2>Kuesioner</h2>
+            <p>Metode Evaluasi</p>
+            <h3>Kuesioner</h3>
         </div>
         """, unsafe_allow_html=True)
 
     # Objek Audit
     st.markdown("""
-    <div class="object-card">
-
+    <div class="audit-card">
         <h3>PT Muria Bangun Mandiri</h3>
 
         <p>
@@ -339,9 +271,7 @@ if st.session_state.menu == "Dashboard":
             Aplikasi Persediaan dan Penjualan.
         </p>
 
-        <p>
-            <b>Fokus evaluasi:</b>
-        </p>
+        <p><b>Fokus evaluasi:</b></p>
 
         <ul>
             <li>Pengelolaan data persediaan.</li>
@@ -349,22 +279,18 @@ if st.session_state.menu == "Dashboard":
             <li>Keamanan dan pengendalian sistem.</li>
             <li>Ketepatan informasi dan pelaporan.</li>
         </ul>
-
     </div>
     """, unsafe_allow_html=True)
 
-    # Domain COBIT 5
-    st.markdown("### Domain COBIT 5")
+    st.subheader("Domain COBIT 5")
 
-    st.markdown("""
-    <p style="color:#80586B;">
-        Lima domain COBIT 5 yang menjadi dasar evaluasi tata kelola TI.
-    </p>
-    """, unsafe_allow_html=True)
+    st.write(
+        "Lima domain yang digunakan sebagai dasar evaluasi."
+    )
 
-    col1, col2, col3 = st.columns(3)
+    domain1, domain2, domain3 = st.columns(3)
 
-    with col1:
+    with domain1:
         st.markdown("""
         <div class="domain-card">
             <h4>EDM</h4>
@@ -372,7 +298,7 @@ if st.session_state.menu == "Dashboard":
         </div>
         """, unsafe_allow_html=True)
 
-    with col2:
+    with domain2:
         st.markdown("""
         <div class="domain-card">
             <h4>APO</h4>
@@ -380,7 +306,7 @@ if st.session_state.menu == "Dashboard":
         </div>
         """, unsafe_allow_html=True)
 
-    with col3:
+    with domain3:
         st.markdown("""
         <div class="domain-card">
             <h4>BAI</h4>
@@ -388,9 +314,9 @@ if st.session_state.menu == "Dashboard":
         </div>
         """, unsafe_allow_html=True)
 
-    col4, col5 = st.columns(2)
+    domain4, domain5 = st.columns(2)
 
-    with col4:
+    with domain4:
         st.markdown("""
         <div class="domain-card">
             <h4>DSS</h4>
@@ -398,7 +324,7 @@ if st.session_state.menu == "Dashboard":
         </div>
         """, unsafe_allow_html=True)
 
-    with col5:
+    with domain5:
         st.markdown("""
         <div class="domain-card">
             <h4>MEA</h4>
@@ -407,207 +333,229 @@ if st.session_state.menu == "Dashboard":
         """, unsafe_allow_html=True)
 
 
-# ==========================================
-# PROFIL PERUSAHAAN
-# ==========================================
+# =====================================
+# 7. HALAMAN PROFIL PERUSAHAAN
+# =====================================
 
 elif st.session_state.menu == "Profil Perusahaan":
 
     st.title("Profil Perusahaan")
 
-    st.markdown("""
-    <p style="color:#80586B;">
-        Informasi mengenai perusahaan yang menjadi objek audit.
-    </p>
-    """, unsafe_allow_html=True)
-
-    show_notice(
-        "PT Muria Bangun Mandiri",
-        "PT Muria Bangun Mandiri merupakan perusahaan yang menjadi objek evaluasi dalam kegiatan audit tata kelola teknologi informasi menggunakan kerangka kerja COBIT 5."
+    st.write(
+        "Informasi perusahaan yang menjadi objek audit."
     )
 
-    st.markdown("### Informasi Objek Audit")
+    tampilkan_card(
+        "PT Muria Bangun Mandiri",
+        "Perusahaan yang menjadi objek evaluasi tata kelola teknologi informasi menggunakan kerangka kerja COBIT 5."
+    )
 
-    col1, col2 = st.columns(2)
+    st.subheader("Informasi Objek Audit")
 
-    with col1:
-        show_notice(
+    kolom1, kolom2 = st.columns(2)
+
+    with kolom1:
+        tampilkan_card(
             "Nama Perusahaan",
             "PT Muria Bangun Mandiri"
         )
 
-    with col2:
-        show_notice(
+    with kolom2:
+        tampilkan_card(
             "Sistem yang Dievaluasi",
             "Aplikasi Persediaan dan Penjualan"
         )
 
 
-# ==========================================
-# KUESIONER AUDIT
-# ==========================================
+# =====================================
+# 8. HALAMAN KUESIONER AUDIT
+# =====================================
 
 elif st.session_state.menu == "Kuesioner Audit":
 
     st.title("Kuesioner Audit")
 
-    st.markdown("""
-    <p style="color:#80586B;">
-        Halaman pengisian kuesioner evaluasi aplikasi.
-    </p>
-    """, unsafe_allow_html=True)
-
-    show_notice(
-        "Petunjuk Pengisian",
-        "Kuesioner digunakan untuk mengetahui tingkat penerapan tata kelola teknologi informasi pada Aplikasi Persediaan dan Penjualan PT Muria Bangun Mandiri."
+    st.write(
+        "Pengisian kuesioner evaluasi Aplikasi Persediaan dan Penjualan."
     )
 
-    st.markdown("### Identitas Responden")
+    tampilkan_card(
+        "Petunjuk Pengisian",
+        "Isi identitas responden dan pilih jawaban yang sesuai dengan kondisi penggunaan aplikasi."
+    )
+
+    st.subheader("Identitas Responden")
 
     nama = st.text_input("Nama Responden")
     jabatan = st.text_input("Jabatan")
 
-    st.markdown("### Pertanyaan Audit")
+    st.subheader("Pertanyaan Audit")
 
-    pertanyaan = [
-        "Apakah data persediaan telah dikelola dengan baik?",
-        "Apakah transaksi penjualan dicatat secara akurat?",
-        "Apakah sistem memiliki pengamanan terhadap akses pengguna?",
-        "Apakah informasi yang dihasilkan sistem sesuai kebutuhan?",
-        "Apakah laporan penjualan dapat diakses dengan mudah?"
+    daftar_pertanyaan = [
+        "Data persediaan dikelola dengan baik.",
+        "Transaksi penjualan dicatat secara akurat.",
+        "Sistem memiliki pengamanan akses pengguna.",
+        "Informasi yang dihasilkan sesuai kebutuhan.",
+        "Laporan penjualan dapat diakses dengan mudah."
     ]
 
-    jawaban = []
+    pilihan_jawaban = [
+        "Sangat Tidak Setuju",
+        "Tidak Setuju",
+        "Netral",
+        "Setuju",
+        "Sangat Setuju"
+    ]
 
-    for i, soal in enumerate(pertanyaan):
-        st.markdown(f"**{i+1}. {soal}**")
+    jawaban_responden = []
 
-        nilai = st.selectbox(
-            "Pilih jawaban",
-            [
-                "Pilih jawaban",
-                "Sangat Tidak Setuju",
-                "Tidak Setuju",
-                "Netral",
-                "Setuju",
-                "Sangat Setuju"
-            ],
-            key=f"jawaban_{i}"
+    for nomor, pertanyaan in enumerate(daftar_pertanyaan, start=1):
+
+        st.markdown(f"**{nomor}. {pertanyaan}**")
+
+        jawaban = st.radio(
+            "Pilih jawaban:",
+            pilihan_jawaban,
+            key=f"pertanyaan_{nomor}",
+            horizontal=True
         )
 
-        jawaban.append(nilai)
+        jawaban_responden.append(jawaban)
 
     if st.button("Simpan Jawaban"):
 
-        if not nama or not jabatan:
-            st.warning("Silakan lengkapi nama dan jabatan responden.")
+        if not nama.strip() or not jabatan.strip():
 
-        elif "Pilih jawaban" in jawaban:
-            st.warning("Silakan jawab seluruh pertanyaan.")
+            st.warning(
+                "Nama dan jabatan responden harus diisi."
+            )
 
         else:
-            st.success("Jawaban berhasil diproses pada sesi ini.")
+
+            st.session_state.hasil_kuesioner.append({
+                "nama": nama,
+                "jabatan": jabatan,
+                "jawaban": jawaban_responden
+            })
+
+            st.success(
+                "Jawaban berhasil disimpan dalam sesi aplikasi."
+            )
 
 
-# ==========================================
-# HASIL AUDIT
-# ==========================================
+# =====================================
+# 9. HALAMAN HASIL AUDIT
+# =====================================
 
 elif st.session_state.menu == "Hasil Audit":
 
     st.title("Hasil Audit")
 
-    st.markdown("""
-    <p style="color:#80586B;">
-        Halaman untuk menampilkan hasil evaluasi audit COBIT 5.
-    </p>
-    """, unsafe_allow_html=True)
-
-    show_notice(
-        "Informasi Hasil Audit",
-        "Hasil audit akan ditampilkan berdasarkan pengolahan jawaban kuesioner dan penilaian tingkat kapabilitas proses COBIT 5."
+    st.write(
+        "Ringkasan hasil pengisian kuesioner audit."
     )
 
-    st.markdown("### Ringkasan Hasil")
+    jumlah_responden = len(
+        st.session_state.hasil_kuesioner
+    )
 
-    col1, col2 = st.columns(2)
+    kolom1, kolom2 = st.columns(2)
 
-    with col1:
-        st.markdown("""
+    with kolom1:
+        st.markdown(f"""
         <div class="info-card">
-            <h4>Jumlah Responden</h4>
-            <h2>0</h2>
+            <p>Jumlah Responden</p>
+            <h3>{jumlah_responden}</h3>
         </div>
         """, unsafe_allow_html=True)
 
-    with col2:
-        st.markdown("""
+    with kolom2:
+        status = "Sudah Ada Data" if jumlah_responden > 0 else "Belum Ada Data"
+
+        st.markdown(f"""
         <div class="info-card">
-            <h4>Status Audit</h4>
-            <h2>Belum Dinilai</h2>
+            <p>Status Pengisian</p>
+            <h3>{status}</h3>
         </div>
         """, unsafe_allow_html=True)
 
+    st.subheader("Data Responden")
 
-# ==========================================
-# REKOMENDASI
-# ==========================================
+    if jumlah_responden > 0:
+
+        for nomor, data in enumerate(
+            st.session_state.hasil_kuesioner,
+            start=1
+        ):
+
+            with st.expander(
+                f"Responden {nomor}: {data['nama']}"
+            ):
+
+                st.write("Jabatan:", data["jabatan"])
+
+                for i, jawaban in enumerate(
+                    data["jawaban"],
+                    start=1
+                ):
+                    st.write(
+                        f"Pertanyaan {i}: {jawaban}"
+                    )
+
+    else:
+
+        st.info(
+            "Belum ada jawaban kuesioner yang tersimpan."
+        )
+
+
+# =====================================
+# 10. HALAMAN REKOMENDASI
+# =====================================
 
 elif st.session_state.menu == "Rekomendasi":
 
     st.title("Rekomendasi Perbaikan")
 
-    st.markdown("""
-    <p style="color:#80586B;">
-        Rekomendasi berdasarkan hasil evaluasi tata kelola teknologi informasi.
-    </p>
-    """, unsafe_allow_html=True)
-
-    show_notice(
-        "Rekomendasi Audit",
-        "Rekomendasi perbaikan akan disusun berdasarkan hasil pengukuran tingkat kapabilitas dan temuan audit pada Aplikasi Persediaan dan Penjualan."
+    st.write(
+        "Fokus rekomendasi untuk meningkatkan kualitas sistem."
     )
 
-    st.markdown("### Fokus Rekomendasi")
+    tampilkan_card(
+        "Pengelolaan Persediaan",
+        "Meningkatkan ketepatan pencatatan stok dan melakukan pembaruan data persediaan secara berkala."
+    )
 
-    rekomendasi = [
-        (
-            "Pengelolaan Persediaan",
-            "Meningkatkan ketepatan pencatatan stok dan melakukan pembaruan data persediaan secara berkala."
-        ),
-        (
-            "Transaksi Penjualan",
-            "Memastikan setiap transaksi penjualan tercatat secara lengkap, akurat, dan terdokumentasi."
-        ),
-        (
-            "Keamanan Sistem",
-            "Menerapkan pengaturan hak akses pengguna dan perlindungan terhadap data perusahaan."
-        ),
-        (
-            "Pelaporan",
-            "Meningkatkan kualitas laporan agar informasi yang dihasilkan akurat dan mudah dipahami."
-        )
-    ]
+    tampilkan_card(
+        "Transaksi Penjualan",
+        "Memastikan setiap transaksi penjualan tercatat secara lengkap, akurat, dan terdokumentasi."
+    )
 
-    for judul, isi in rekomendasi:
-        show_notice(judul, isi)
+    tampilkan_card(
+        "Keamanan Sistem",
+        "Menerapkan pengaturan hak akses pengguna dan perlindungan terhadap data perusahaan."
+    )
+
+    tampilkan_card(
+        "Pelaporan",
+        "Meningkatkan kualitas laporan agar informasi yang dihasilkan akurat dan mudah dipahami."
+    )
 
 
-# ==========================================
-# FOOTER
-# ==========================================
+# =====================================
+# 11. FOOTER
+# =====================================
 
-st.markdown("---")
+st.divider()
 
 st.markdown("""
 <p style="
-    color: #A77B8E;
-    font-size: 12px;
-    text-align: center;
-    padding: 10px;
+    text-align:center;
+    color:#A77B8E;
+    font-size:12px;
 ">
-    Sistem Audit COBIT 5 | Aplikasi Persediaan dan Penjualan
-    <br>
+    Sistem Audit COBIT 5<br>
+    Aplikasi Persediaan dan Penjualan<br>
     PT Muria Bangun Mandiri
 </p>
 """, unsafe_allow_html=True)
