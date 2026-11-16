@@ -16,14 +16,14 @@ if "menu" not in st.session_state:
     st.session_state.menu = "Dashboard"
 
 # =====================================
-# CSS GRADASI SOFT PINK
+# CSS SOFT PINK GRADIENT
 # =====================================
 st.markdown("""
 <style>
 
-/* FONT */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
+/* FONT GLOBAL */
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
@@ -33,36 +33,78 @@ html, body, [class*="css"] {
     background: linear-gradient(
         135deg,
         #FFF8FA 0%,
-        #FCEAF0 50%,
-        #F8DCE6 100%
-    );
+        #FCE4EC 35%,
+        #F8D7E3 70%,
+        #F2C6D6 100%
+    ) !important;
+    background-attachment: fixed !important;
 }
 
-/* SIDEBAR */
+/* MEMASTIKAN AREA UTAMA TRANSPARAN */
+[data-testid="stAppViewContainer"] {
+    background: transparent !important;
+}
+
+[data-testid="stMain"] {
+    background: transparent !important;
+}
+
+/* HEADER STREAMLIT */
+[data-testid="stHeader"] {
+    background: rgba(255, 248, 250, 0.85) !important;
+}
+
+/* JARAK KONTEN AGAR TIDAK TERPOTONG */
+.block-container {
+    padding-top: 4.5rem !important;
+    padding-bottom: 3rem !important;
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+    max-width: 1500px;
+}
+
+/* SIDEBAR GRADASI */
 [data-testid="stSidebar"] {
     background: linear-gradient(
         180deg,
-        #F4C9D7 0%,
-        #EFB8CA 55%,
-        #E8A5BC 100%
-    );
+        #F8D6E2 0%,
+        #F1BDD0 45%,
+        #EBAAC2 75%,
+        #E69AB8 100%
+    ) !important;
+}
+
+/* ISI SIDEBAR */
+[data-testid="stSidebar"] > div:first-child {
+    background: transparent !important;
 }
 
 [data-testid="stSidebar"] * {
     color: #70465A;
 }
 
-/* JUDUL */
+/* JUDUL UTAMA */
 .main-title {
     font-family: 'Poppins', sans-serif;
     font-size: 32px;
     font-weight: 700;
-    color: #8B526B;
+    color: #90566F;
+    margin-top: 0;
+    margin-bottom: 8px;
 }
 
+/* SUBJUDUL */
 .subtitle {
-    color: #A47B8C;
+    color: #A7798D;
     font-size: 15px;
+}
+
+/* JUDUL BAGIAN */
+.section-title {
+    font-family: 'Poppins', sans-serif;
+    color: #90566F;
+    font-size: 22px;
+    font-weight: 700;
 }
 
 /* KARTU DASHBOARD */
@@ -70,15 +112,17 @@ html, body, [class*="css"] {
     background: linear-gradient(
         135deg,
         #FFFFFF 0%,
-        #FFF0F5 100%
+        #FFF4F7 55%,
+        #FCEAF0 100%
     );
     padding: 22px;
     border-radius: 16px;
-    border: 1px solid #F2D5DF;
-    box-shadow: 0 4px 15px rgba(190, 120, 150, 0.10);
+    border: 1px solid #F1D1DE;
+    box-shadow: 0 5px 18px rgba(174, 104, 133, 0.10);
     min-height: 125px;
 }
 
+/* TEKS KARTU */
 .info-label {
     color: #987586;
     font-size: 14px;
@@ -87,14 +131,7 @@ html, body, [class*="css"] {
 .info-value {
     color: #C47796;
     font-size: 27px;
-    font-weight: bold;
-}
-
-.section-title {
-    font-family: 'Poppins', sans-serif;
-    color: #8B526B;
-    font-size: 22px;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 /* TOMBOL */
@@ -108,7 +145,6 @@ html, body, [class*="css"] {
     border: none;
     border-radius: 10px;
     font-weight: 600;
-    padding: 8px 20px;
 }
 
 .stButton > button:hover {
@@ -123,8 +159,12 @@ html, body, [class*="css"] {
 
 /* KOTAK INFORMASI */
 [data-testid="stAlert"] {
-    background: #FFF0F5;
-    border: 1px solid #F2D5DF;
+    background: linear-gradient(
+        120deg,
+        #FFF8FA,
+        #FCEAF0
+    ) !important;
+    border: 1px solid #F1D1DE;
     border-radius: 12px;
 }
 
@@ -133,15 +173,42 @@ hr {
     border-color: #EBCBD7;
 }
 
-/* RADIO MENU SIDEBAR */
+/* RADIO MENU */
 [data-testid="stSidebar"] [role="radiogroup"] {
     gap: 8px;
 }
 
-/* JARAK KONTEN */
-.block-container {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+/* RADIO BUTTON */
+[data-testid="stSidebar"] [role="radiogroup"] label {
+    color: #70465A !important;
+}
+
+/* SIDEBAR JUDUL */
+.sidebar-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #70465A;
+    margin-bottom: 0;
+}
+
+.sidebar-subtitle {
+    color: #80586B;
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .block-container {
+        padding-top: 3rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .main-title {
+        font-size: 25px;
+    }
 }
 
 </style>
@@ -154,24 +221,12 @@ hr {
 with st.sidebar:
 
     st.markdown(
-        """
-        <h1 style="
-            font-family: Poppins;
-            color: #70465A;
-            font-size: 30px;
-            margin-bottom: 0;
-        ">
-            COBIT 5
-        </h1>
-        <p style="
-            color: #80586B;
-            font-size: 13px;
-            letter-spacing: 2px;
-            margin-top: 0;
-        ">
-            AUDIT SYSTEM
-        </p>
-        """,
+        '<p class="sidebar-title">COBIT 5</p>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<p class="sidebar-subtitle">AUDIT SYSTEM</p>',
         unsafe_allow_html=True
     )
 
@@ -263,7 +318,6 @@ if menu == "Dashboard":
 
     st.write("")
 
-    # OBJEK AUDIT
     st.markdown(
         '<p class="section-title">Objek Audit</p>',
         unsafe_allow_html=True
@@ -281,7 +335,6 @@ if menu == "Dashboard":
     - Ketepatan informasi dan pelaporan.
     """)
 
-    # DOMAIN COBIT
     st.markdown(
         '<p class="section-title">Domain COBIT 5</p>',
         unsafe_allow_html=True
@@ -316,7 +369,7 @@ elif menu == "Profil Perusahaan":
 
     st.divider()
 
-    st.subheader("PT Muria Bangun Mandiri")
+    st.header("PT Muria Bangun Mandiri")
 
     st.write("""
     PT Muria Bangun Mandiri merupakan objek yang digunakan
@@ -373,7 +426,9 @@ elif menu == "Hasil Audit":
 
     st.divider()
 
-    st.info("Hasil audit akan ditampilkan setelah proses pengisian kuesioner selesai.")
+    st.info(
+        "Hasil audit akan ditampilkan setelah proses pengisian kuesioner selesai."
+    )
 
     st.write("""
     Halaman ini nantinya menampilkan hasil penilaian,
@@ -399,7 +454,9 @@ elif menu == "Rekomendasi":
 
     st.divider()
 
-    st.info("Rekomendasi audit akan ditampilkan berdasarkan hasil penilaian.")
+    st.info(
+        "Rekomendasi audit akan ditampilkan berdasarkan hasil penilaian."
+    )
 
     st.write("""
     Halaman ini nantinya berisi saran perbaikan
