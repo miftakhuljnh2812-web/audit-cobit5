@@ -1,3 +1,4 @@
+
 import streamlit as st
 
 # =====================================
@@ -15,8 +16,9 @@ st.set_page_config(
 if "menu" not in st.session_state:
     st.session_state.menu = "Dashboard"
 
+
 # =====================================
-# CSS SOFT PINK GRADIENT
+# CSS GRADASI SOFT PINK
 # =====================================
 st.markdown("""
 <style>
@@ -40,11 +42,8 @@ html, body, [class*="css"] {
     background-attachment: fixed !important;
 }
 
-/* MEMASTIKAN AREA UTAMA TRANSPARAN */
-[data-testid="stAppViewContainer"] {
-    background: transparent !important;
-}
-
+/* AREA UTAMA */
+[data-testid="stAppViewContainer"],
 [data-testid="stMain"] {
     background: transparent !important;
 }
@@ -54,7 +53,7 @@ html, body, [class*="css"] {
     background: rgba(255, 248, 250, 0.85) !important;
 }
 
-/* JARAK KONTEN AGAR TIDAK TERPOTONG */
+/* JARAK KONTEN */
 .block-container {
     padding-top: 4.5rem !important;
     padding-bottom: 3rem !important;
@@ -63,7 +62,7 @@ html, body, [class*="css"] {
     max-width: 1500px;
 }
 
-/* SIDEBAR GRADASI */
+/* SIDEBAR */
 [data-testid="stSidebar"] {
     background: linear-gradient(
         180deg,
@@ -74,13 +73,27 @@ html, body, [class*="css"] {
     ) !important;
 }
 
-/* ISI SIDEBAR */
 [data-testid="stSidebar"] > div:first-child {
     background: transparent !important;
 }
 
 [data-testid="stSidebar"] * {
     color: #70465A;
+}
+
+/* JUDUL SIDEBAR */
+.sidebar-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #70465A;
+    margin-bottom: 0;
+}
+
+.sidebar-subtitle {
+    color: #80586B;
+    font-size: 13px;
+    letter-spacing: 2px;
 }
 
 /* JUDUL UTAMA */
@@ -107,7 +120,7 @@ html, body, [class*="css"] {
     font-weight: 700;
 }
 
-/* KARTU DASHBOARD */
+/* KARTU RINGKASAN AUDIT */
 .info-card {
     background: linear-gradient(
         135deg,
@@ -122,7 +135,6 @@ html, body, [class*="css"] {
     min-height: 125px;
 }
 
-/* TEKS KARTU */
 .info-label {
     color: #987586;
     font-size: 14px;
@@ -132,6 +144,34 @@ html, body, [class*="css"] {
     color: #C47796;
     font-size: 27px;
     font-weight: 700;
+}
+
+/* KARTU OBJEK AUDIT */
+.object-card {
+    background: linear-gradient(
+        120deg,
+        #FFF8FA 0%,
+        #FCE4EC 50%,
+        #F5D0DE 100%
+    );
+    border: 1px solid #EFC6D5;
+    border-radius: 15px;
+    padding: 22px 25px;
+    box-shadow: 0 4px 15px rgba(190, 120, 150, 0.10);
+    color: #70465A;
+}
+
+.object-card h4 {
+    color: #90566F;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 0;
+    font-size: 19px;
+}
+
+.object-card p,
+.object-card li {
+    color: #80586B;
+    line-height: 1.8;
 }
 
 /* TOMBOL */
@@ -157,15 +197,17 @@ html, body, [class*="css"] {
     border: none;
 }
 
-/* KOTAK INFORMASI */
+/* KOTAK INFORMASI STREAMLIT */
 [data-testid="stAlert"] {
     background: linear-gradient(
         120deg,
         #FFF8FA,
         #FCEAF0
     ) !important;
-    border: 1px solid #F1D1DE;
+    border: 1px solid #F1D1DE !important;
+    border-left: 5px solid #D987A6 !important;
     border-radius: 12px;
+    color: #80586B !important;
 }
 
 /* PEMISAH */
@@ -178,24 +220,8 @@ hr {
     gap: 8px;
 }
 
-/* RADIO BUTTON */
 [data-testid="stSidebar"] [role="radiogroup"] label {
     color: #70465A !important;
-}
-
-/* SIDEBAR JUDUL */
-.sidebar-title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 30px;
-    font-weight: 700;
-    color: #70465A;
-    margin-bottom: 0;
-}
-
-.sidebar-subtitle {
-    color: #80586B;
-    font-size: 13px;
-    letter-spacing: 2px;
 }
 
 /* RESPONSIVE */
@@ -208,6 +234,10 @@ hr {
 
     .main-title {
         font-size: 25px;
+    }
+
+    .info-card {
+        margin-bottom: 12px;
     }
 }
 
@@ -280,6 +310,7 @@ if menu == "Dashboard":
 
     st.divider()
 
+    # RINGKASAN AUDIT
     st.markdown(
         '<p class="section-title">Ringkasan Audit</p>',
         unsafe_allow_html=True
@@ -318,23 +349,37 @@ if menu == "Dashboard":
 
     st.write("")
 
+    # OBJEK AUDIT
     st.markdown(
         '<p class="section-title">Objek Audit</p>',
         unsafe_allow_html=True
     )
 
-    st.info("""
-    **PT Muria Bangun Mandiri**
+    st.markdown("""
+    <div class="object-card">
 
-    Objek evaluasi: Aplikasi Audit Persediaan dan Penjualan.
+        <h4>PT Muria Bangun Mandiri</h4>
 
-    Fokus evaluasi:
-    - Pengelolaan data persediaan.
-    - Pencatatan transaksi penjualan.
-    - Keamanan dan pengendalian sistem.
-    - Ketepatan informasi dan pelaporan.
-    """)
+        <p>
+            <b>Objek evaluasi:</b>
+            Aplikasi Audit Persediaan dan Penjualan.
+        </p>
 
+        <p><b>Fokus evaluasi:</b></p>
+
+        <ul>
+            <li>Pengelolaan data persediaan.</li>
+            <li>Pencatatan transaksi penjualan.</li>
+            <li>Keamanan dan pengendalian sistem.</li>
+            <li>Ketepatan informasi dan pelaporan.</li>
+        </ul>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.write("")
+
+    # DOMAIN COBIT 5
     st.markdown(
         '<p class="section-title">Domain COBIT 5</p>',
         unsafe_allow_html=True
@@ -401,7 +446,9 @@ elif menu == "Kuesioner Audit":
 
     st.divider()
 
-    st.info("Halaman kuesioner audit akan dikembangkan.")
+    st.info(
+        "Halaman kuesioner audit akan dikembangkan."
+    )
 
     st.write("""
     Kuesioner ini nantinya digunakan untuk menilai
