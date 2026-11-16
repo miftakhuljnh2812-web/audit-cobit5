@@ -1,4 +1,3 @@
-
 import streamlit as st
 
 # =====================================
@@ -18,14 +17,14 @@ if "menu" not in st.session_state:
 
 
 # =====================================
-# CSS GRADASI SOFT PINK
+# CSS WEBSITE
 # =====================================
 st.markdown("""
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
-/* FONT GLOBAL */
+/* FONT */
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
@@ -34,31 +33,28 @@ html, body, [class*="css"] {
 .stApp {
     background: linear-gradient(
         135deg,
-        #FFF8FA 0%,
-        #FCE4EC 35%,
-        #F8D7E3 70%,
-        #F2C6D6 100%
+        #FFF9FB 0%,
+        #FCEAF0 35%,
+        #F8DCE6 70%,
+        #F1C6D6 100%
     ) !important;
     background-attachment: fixed !important;
 }
 
-/* AREA UTAMA */
 [data-testid="stAppViewContainer"],
 [data-testid="stMain"] {
     background: transparent !important;
 }
 
-/* HEADER STREAMLIT */
+/* HEADER */
 [data-testid="stHeader"] {
-    background: rgba(255, 248, 250, 0.85) !important;
+    background: rgba(255, 249, 251, 0.85) !important;
 }
 
 /* JARAK KONTEN */
 .block-container {
-    padding-top: 4.5rem !important;
+    padding-top: 4rem !important;
     padding-bottom: 3rem !important;
-    padding-left: 3rem !important;
-    padding-right: 3rem !important;
     max-width: 1500px;
 }
 
@@ -66,10 +62,9 @@ html, body, [class*="css"] {
 [data-testid="stSidebar"] {
     background: linear-gradient(
         180deg,
-        #F8D6E2 0%,
-        #F1BDD0 45%,
-        #EBAAC2 75%,
-        #E69AB8 100%
+        #F9DCE6 0%,
+        #F2C4D5 50%,
+        #E9A9C1 100%
     ) !important;
 }
 
@@ -91,9 +86,9 @@ html, body, [class*="css"] {
 }
 
 .sidebar-subtitle {
-    color: #80586B;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 2px;
+    color: #80586B;
 }
 
 /* JUDUL UTAMA */
@@ -102,11 +97,9 @@ html, body, [class*="css"] {
     font-size: 32px;
     font-weight: 700;
     color: #90566F;
-    margin-top: 0;
-    margin-bottom: 8px;
+    margin: 0 0 8px 0;
 }
 
-/* SUBJUDUL */
 .subtitle {
     color: #A7798D;
     font-size: 15px;
@@ -118,9 +111,10 @@ html, body, [class*="css"] {
     color: #90566F;
     font-size: 22px;
     font-weight: 700;
+    margin-bottom: 12px;
 }
 
-/* KARTU RINGKASAN AUDIT */
+/* KARTU RINGKASAN */
 .info-card {
     background: linear-gradient(
         135deg,
@@ -144,34 +138,73 @@ html, body, [class*="css"] {
     color: #C47796;
     font-size: 27px;
     font-weight: 700;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 /* KARTU OBJEK AUDIT */
 .object-card {
     background: linear-gradient(
         120deg,
-        #FFF8FA 0%,
+        #FFF9FB 0%,
         #FCE4EC 50%,
-        #F5D0DE 100%
+        #F2C6D6 100%
     );
     border: 1px solid #EFC6D5;
-    border-radius: 15px;
-    padding: 22px 25px;
-    box-shadow: 0 4px 15px rgba(190, 120, 150, 0.10);
-    color: #70465A;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 5px 18px rgba(174, 104, 133, 0.12);
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
-.object-card h4 {
+.object-card h3 {
     color: #90566F;
     font-family: 'Poppins', sans-serif;
+    font-size: 20px;
     margin-top: 0;
-    font-size: 19px;
 }
 
 .object-card p,
 .object-card li {
     color: #80586B;
+    font-size: 15px;
     line-height: 1.8;
+}
+
+/* KARTU INFORMASI */
+.notice-card {
+    background: linear-gradient(
+        120deg,
+        #FFF9FB,
+        #FCEAF0,
+        #F5DCE5
+    );
+    border: 1px solid #EFC6D5;
+    border-radius: 14px;
+    padding: 20px;
+    color: #80586B;
+    line-height: 1.8;
+}
+
+/* KARTU DOMAIN */
+.domain-card {
+    background: linear-gradient(
+        120deg,
+        #FFFFFF,
+        #FCEAF0
+    );
+    border: 1px solid #F1D1DE;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    color: #80586B;
+}
+
+.domain-code {
+    color: #C47796;
+    font-weight: 700;
+    font-size: 17px;
 }
 
 /* TOMBOL */
@@ -197,17 +230,9 @@ html, body, [class*="css"] {
     border: none;
 }
 
-/* KOTAK INFORMASI STREAMLIT */
-[data-testid="stAlert"] {
-    background: linear-gradient(
-        120deg,
-        #FFF8FA,
-        #FCEAF0
-    ) !important;
-    border: 1px solid #F1D1DE !important;
-    border-left: 5px solid #D987A6 !important;
-    border-radius: 12px;
-    color: #80586B !important;
+/* RADIO SIDEBAR */
+[data-testid="stSidebar"] [role="radiogroup"] {
+    gap: 8px;
 }
 
 /* PEMISAH */
@@ -215,21 +240,10 @@ hr {
     border-color: #EBCBD7;
 }
 
-/* RADIO MENU */
-[data-testid="stSidebar"] [role="radiogroup"] {
-    gap: 8px;
-}
-
-[data-testid="stSidebar"] [role="radiogroup"] label {
-    color: #70465A !important;
-}
-
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .block-container {
-        padding-top: 3rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+        padding: 3rem 1rem 2rem 1rem !important;
     }
 
     .main-title {
@@ -243,6 +257,19 @@ hr {
 
 </style>
 """, unsafe_allow_html=True)
+
+
+# =====================================
+# FUNGSI KARTU INFORMASI
+# =====================================
+def show_notice(title, description):
+
+    st.markdown(f"""
+    <div class="notice-card">
+        <b>{title}</b>
+        <p>{description}</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # =====================================
@@ -282,7 +309,7 @@ with st.sidebar:
 
 
 # =====================================
-# DASHBOARD
+# HALAMAN DASHBOARD
 # =====================================
 if menu == "Dashboard":
 
@@ -349,25 +376,50 @@ if menu == "Dashboard":
 
     st.write("")
 
+    # =================================
     # OBJEK AUDIT
+    # =================================
     st.markdown(
         '<p class="section-title">Objek Audit</p>',
         unsafe_allow_html=True
     )
 
     st.markdown("""
-    <div class="object-card">
+    <div style="
+        background: linear-gradient(
+            120deg,
+            #FFF9FB 0%,
+            #FCE4EC 50%,
+            #F2C6D6 100%
+        );
+        border: 1px solid #EFC6D5;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 5px 18px rgba(174, 104, 133, 0.12);
+        margin-bottom: 20px;
+    ">
 
-        <h4>PT Muria Bangun Mandiri</h4>
+        <h3 style="
+            color: #90566F;
+            font-family: Poppins, sans-serif;
+            margin-top: 0;
+        ">
+            PT Muria Bangun Mandiri
+        </h3>
 
-        <p>
-            <b>Objek evaluasi:</b>
-            Aplikasi Audit Persediaan dan Penjualan.
+        <p style="color: #80586B; line-height: 1.8;">
+            <b>Objek evaluasi:</b><br>
+            Aplikasi Persediaan dan Penjualan.
         </p>
 
-        <p><b>Fokus evaluasi:</b></p>
+        <p style="color: #80586B;">
+            <b>Fokus evaluasi:</b>
+        </p>
 
-        <ul>
+        <ul style="
+            color: #80586B;
+            line-height: 2;
+        ">
             <li>Pengelolaan data persediaan.</li>
             <li>Pencatatan transaksi penjualan.</li>
             <li>Keamanan dan pengendalian sistem.</li>
@@ -377,9 +429,9 @@ if menu == "Dashboard":
     </div>
     """, unsafe_allow_html=True)
 
-    st.write("")
-
+    # =================================
     # DOMAIN COBIT 5
+    # =================================
     st.markdown(
         '<p class="section-title">Domain COBIT 5</p>',
         unsafe_allow_html=True
@@ -394,11 +446,17 @@ if menu == "Dashboard":
     }
 
     for kode, nama in domains.items():
-        st.markdown(f"**{kode}** — {nama}")
+
+        st.markdown(f"""
+        <div class="domain-card">
+            <span class="domain-code">{kode}</span>
+            <span> — {nama}</span>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 # =====================================
-# PROFIL PERUSAHAAN
+# HALAMAN PROFIL PERUSAHAAN
 # =====================================
 elif menu == "Profil Perusahaan":
 
@@ -414,23 +472,43 @@ elif menu == "Profil Perusahaan":
 
     st.divider()
 
-    st.header("PT Muria Bangun Mandiri")
+    st.subheader("PT Muria Bangun Mandiri")
 
-    st.write("""
-    PT Muria Bangun Mandiri merupakan objek yang digunakan
-    dalam evaluasi tata kelola teknologi informasi pada
-    aplikasi persediaan dan penjualan.
-    """)
+    show_notice(
+        "Informasi Perusahaan",
+        "PT Muria Bangun Mandiri merupakan objek yang digunakan "
+        "dalam evaluasi tata kelola teknologi informasi pada "
+        "aplikasi persediaan dan penjualan."
+    )
+
+    st.write("")
 
     st.markdown("### Informasi Audit")
 
-    st.write("**Objek Audit:** Aplikasi Persediaan dan Penjualan")
-    st.write("**Framework:** COBIT 5")
-    st.write("**Fokus Audit:** Tata kelola dan pengelolaan teknologi informasi")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        show_notice(
+            "Objek Audit",
+            "Aplikasi Persediaan dan Penjualan."
+        )
+
+    with col2:
+        show_notice(
+            "Framework",
+            "COBIT 5."
+        )
+
+    st.write("")
+
+    show_notice(
+        "Fokus Audit",
+        "Evaluasi tata kelola dan pengelolaan teknologi informasi."
+    )
 
 
 # =====================================
-# KUESIONER AUDIT
+# HALAMAN KUESIONER AUDIT
 # =====================================
 elif menu == "Kuesioner Audit":
 
@@ -446,18 +524,15 @@ elif menu == "Kuesioner Audit":
 
     st.divider()
 
-    st.info(
-        "Halaman kuesioner audit akan dikembangkan."
+    show_notice(
+        "Kuesioner Audit",
+        "Halaman ini nantinya digunakan untuk mengisi "
+        "30 pertanyaan evaluasi berdasarkan domain COBIT 5."
     )
-
-    st.write("""
-    Kuesioner ini nantinya digunakan untuk menilai
-    tingkat kapabilitas proses berdasarkan domain COBIT 5.
-    """)
 
 
 # =====================================
-# HASIL AUDIT
+# HALAMAN HASIL AUDIT
 # =====================================
 elif menu == "Hasil Audit":
 
@@ -473,19 +548,23 @@ elif menu == "Hasil Audit":
 
     st.divider()
 
-    st.info(
-        "Hasil audit akan ditampilkan setelah proses pengisian kuesioner selesai."
+    show_notice(
+        "Hasil Evaluasi",
+        "Hasil audit akan ditampilkan setelah proses "
+        "pengisian kuesioner selesai."
     )
 
-    st.write("""
-    Halaman ini nantinya menampilkan hasil penilaian,
-    tingkat kapabilitas, dan ringkasan evaluasi
-    berdasarkan domain COBIT 5.
-    """)
+    st.write("")
+
+    show_notice(
+        "Tingkat Kapabilitas",
+        "Halaman ini nantinya menampilkan hasil penilaian "
+        "tingkat kapabilitas berdasarkan domain COBIT 5."
+    )
 
 
 # =====================================
-# REKOMENDASI
+# HALAMAN REKOMENDASI
 # =====================================
 elif menu == "Rekomendasi":
 
@@ -501,12 +580,9 @@ elif menu == "Rekomendasi":
 
     st.divider()
 
-    st.info(
-        "Rekomendasi audit akan ditampilkan berdasarkan hasil penilaian."
+    show_notice(
+        "Rekomendasi Perbaikan",
+        "Halaman ini nantinya berisi saran perbaikan "
+        "berdasarkan hasil penilaian audit untuk meningkatkan "
+        "tata kelola teknologi informasi."
     )
-
-    st.write("""
-    Halaman ini nantinya berisi saran perbaikan
-    untuk meningkatkan tata kelola teknologi informasi
-    pada aplikasi persediaan dan penjualan.
-    """)
