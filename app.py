@@ -376,58 +376,61 @@ if menu == "Dashboard":
 
     st.write("")
 
-    # =================================
-    # OBJEK AUDIT
-    # =================================
-    st.markdown(
-        '<p class="section-title">Objek Audit</p>',
-        unsafe_allow_html=True
-    )
+    
+# Objek Audit
+st.markdown("""
+<div style="
+    background: linear-gradient(135deg, #FFF5F8, #FCE4EC);
+    border: 1px solid #F2C6D6;
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-top: 25px;
+    box-shadow: 0 4px 12px rgba(144, 86, 111, 0.08);
+">
 
-    st.markdown("""
-    <div style="
-        background: linear-gradient(
-            120deg,
-            #FFF9FB 0%,
-            #FCE4EC 50%,
-            #F2C6D6 100%
-        );
-        border: 1px solid #EFC6D5;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 5px 18px rgba(174, 104, 133, 0.12);
+    <h3 style="
+        color: #90566F;
+        font-family: 'Poppins', sans-serif;
+        font-size: 23px;
+        margin-top: 0;
         margin-bottom: 20px;
     ">
+        PT Muria Bangun Mandiri
+    </h3>
 
-        <h3 style="
-            color: #90566F;
-            font-family: Poppins, sans-serif;
-            margin-top: 0;
-        ">
-            PT Muria Bangun Mandiri
-        </h3>
+    <p style="
+        color: #80586B;
+        font-size: 15px;
+        line-height: 1.8;
+        margin-bottom: 18px;
+    ">
+        <b>Objek evaluasi</b><br>
+        Aplikasi Persediaan dan Penjualan
+    </p>
 
-        <p style="color: #80586B; line-height: 1.8;">
-            <b>Objek evaluasi:</b><br>
-            Aplikasi Persediaan dan Penjualan.
-        </p>
+    <p style="
+        color: #80586B;
+        font-size: 15px;
+        margin-bottom: 8px;
+    ">
+        <b>Fokus evaluasi</b>
+    </p>
 
-        <p style="color: #80586B;">
-            <b>Fokus evaluasi:</b>
-        </p>
+    <ul style="
+        color: #80586B;
+        font-size: 15px;
+        line-height: 2;
+        padding-left: 22px;
+        margin-bottom: 0;
+    ">
+        <li>Pengelolaan data persediaan.</li>
+        <li>Pencatatan transaksi penjualan.</li>
+        <li>Keamanan dan pengendalian sistem.</li>
+        <li>Ketepatan informasi dan pelaporan.</li>
+    </ul>
 
-        <ul style="
-            color: #80586B;
-            line-height: 2;
-        ">
-            <li>Pengelolaan data persediaan.</li>
-            <li>Pencatatan transaksi penjualan.</li>
-            <li>Keamanan dan pengendalian sistem.</li>
-            <li>Ketepatan informasi dan pelaporan.</li>
-        </ul>
-
-    </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
     # =================================
     # DOMAIN COBIT 5
