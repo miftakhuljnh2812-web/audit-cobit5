@@ -1,4 +1,6 @@
+
 import streamlit as st
+import pandas as pd
 
 # ==================================================
 # 1. KONFIGURASI
@@ -11,7 +13,7 @@ st.set_page_config(
 )
 
 # ==================================================
-# 2. DATA PERTANYAAN AUDIT SESUAI PDF
+# 2. DATA PERTANYAAN AUDIT
 # ==================================================
 
 daftar_domain = {
@@ -208,19 +210,13 @@ if st.session_state.menu == "Dashboard":
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        with st.container(border=True):
-            st.caption("Standar Audit")
-            st.subheader("COBIT 5")
+        tampilkan_card("Standar Audit", "COBIT 5")
 
     with col2:
-        with st.container(border=True):
-            st.caption("Objek Evaluasi")
-            st.subheader("Aplikasi")
+        tampilkan_card("Objek Evaluasi", "Aplikasi")
 
     with col3:
-        with st.container(border=True):
-            st.caption("Jumlah Pertanyaan")
-            st.subheader("30 Pertanyaan")
+        tampilkan_card("Jumlah Pertanyaan", "30 Pertanyaan")
 
     st.markdown("### Objek Audit")
 
@@ -237,19 +233,23 @@ if st.session_state.menu == "Dashboard":
         """)
 
     st.markdown("### Domain COBIT 5")
-    st.write("Evaluasi dilakukan berdasarkan lima domain COBIT 5.")
 
     col1, col2, col3 = st.columns(3)
+
     with col1:
         tampilkan_card("EDM", "Evaluate, Direct and Monitor")
+
     with col2:
         tampilkan_card("APO", "Align, Plan and Organise")
+
     with col3:
         tampilkan_card("BAI", "Build, Acquire and Implement")
 
     col4, col5 = st.columns(2)
+
     with col4:
         tampilkan_card("DSS", "Deliver, Service and Support")
+
     with col5:
         tampilkan_card("MEA", "Monitor, Evaluate and Assess")
 
@@ -268,10 +268,14 @@ elif st.session_state.menu == "Profil Perusahaan":
     )
 
     st.markdown("### Informasi Objek Audit")
+
     col1, col2 = st.columns(2)
 
     with col1:
-        tampilkan_card("Nama Perusahaan", "PT Muria Bangun Mandiri")
+        tampilkan_card(
+            "Nama Perusahaan",
+            "PT Muria Bangun Mandiri"
+        )
 
     with col2:
         tampilkan_card(
@@ -281,7 +285,7 @@ elif st.session_state.menu == "Profil Perusahaan":
 
 
 # ==================================================
-# 9. KUESIONER AUDIT - 30 PERTANYAAN
+# 9. KUESIONER AUDIT
 # ==================================================
 
 elif st.session_state.menu == "Kuesioner Audit":
@@ -298,6 +302,7 @@ elif st.session_state.menu == "Kuesioner Audit":
 
     with st.form("form_audit"):
         st.markdown("### Identitas Audit")
+
         nama_auditor = st.text_input("Nama Auditor")
         nama_responden = st.text_input("Nama Responden")
         bagian = st.text_input("Bagian / Unit Kerja")
@@ -356,8 +361,15 @@ elif st.session_state.menu == "Kuesioner Audit":
     if simpan:
         if not nama_auditor.strip() or not nama_responden.strip():
             st.warning("Nama auditor dan nama responden wajib diisi.")
-        elif any(item["jawaban"] == "Pilih jawaban" for item in jawaban_audit):
-            st.warning("Semua 30 pertanyaan harus diberi jawaban sebelum disimpan.")
+
+        elif any(
+            item["jawaban"] == "Pilih jawaban"
+            for item in jawaban_audit
+        ):
+            st.warning(
+                "Semua 30 pertanyaan harus diberi jawaban sebelum disimpan."
+            )
+
         else:
             data_baru = {
                 "nama_auditor": nama_auditor.strip(),
@@ -367,7 +379,10 @@ elif st.session_state.menu == "Kuesioner Audit":
             }
 
             st.session_state.hasil_audit.append(data_baru)
-            st.success("30 jawaban audit berhasil disimpan dalam sesi aplikasi.")
+
+            st.success(
+                "30 jawaban audit berhasil disimpan dalam sesi aplikasi."
+            )
 
 
 # ==================================================
@@ -376,13 +391,22 @@ elif st.session_state.menu == "Kuesioner Audit":
 
 elif st.session_state.menu == "Hasil Audit":
     st.title("Hasil Audit")
-    st.write("Rekapitulasi jawaban audit berdasarkan lima domain COBIT 5.")
+    st.write(
+        "Rekapitulasi jawaban audit berdasarkan lima domain COBIT 5."
+    )
 
-    if len(st.session_state.hasil_audit) == 0:
-        st.info("Belum ada data audit. Silakan isi kuesioner terlebih dahulu.")
+    if not st.session_state.hasil_audit:
+        st.info(
+            "Belum ada data audit. Silakan isi kuesioner terlebih dahulu."
+        )
+
     else:
-        for nomor_audit, data in enumerate(st.session_state.hasil_audit, start=1):
+        for nomor_audit, data in enumerate(
+            st.session_state.hasil_audit,
+            start=1
+        ):
             st.markdown(f"## Hasil Audit {nomor_audit}")
+
             st.write(f"**Auditor:** {data['nama_auditor']}")
             st.write(f"**Responden:** {data['nama_responden']}")
             st.write(f"**Bagian:** {data['bagian'] or '-'}")
@@ -395,51 +419,215 @@ elif st.session_state.menu == "Hasil Audit":
                     if item["domain"] == kode_domain
                 ]
 
+                jumlah_domain = len(jawaban_domain)
+
+                jumlah_ya = sum(
+                    item["jawaban"] == "Ya"
+                    for item in jawaban_domain
+                )
+
+                jumlah_sebagian = sum(
+                    item["jawaban"] == "Sebagian"
+                    for item in jawaban_domain
+                )
+
+                jumlah_tidak = sum(
+                    item["jawaban"] == "Tidak"
+                    for item in jawaban_domain
+                )
+
+                jumlah_na = sum(
+                    item["jawaban"] == "N/A"
+                    for item in jawaban_domain
+                )
+
                 rekap.append({
                     "Domain": kode_domain,
-                    "Ya": sum(item["jawaban"] == "Ya" for item in jawaban_domain),
-                    "Sebagian": sum(item["jawaban"] == "Sebagian" for item in jawaban_domain),
-                    "Tidak": sum(item["jawaban"] == "Tidak" for item in jawaban_domain),
-                    "N/A": sum(item["jawaban"] == "N/A" for item in jawaban_domain)
+                    "Ya": jumlah_ya,
+                    "Sebagian": jumlah_sebagian,
+                    "Tidak": jumlah_tidak,
+                    "N/A": jumlah_na,
+                    "Persentase Ya": (
+                        jumlah_ya / jumlah_domain * 100
+                        if jumlah_domain else 0
+                    ),
+                    "Persentase Sebagian": (
+                        jumlah_sebagian / jumlah_domain * 100
+                        if jumlah_domain else 0
+                    ),
+                    "Persentase Tidak": (
+                        jumlah_tidak / jumlah_domain * 100
+                        if jumlah_domain else 0
+                    ),
+                    "Persentase N/A": (
+                        jumlah_na / jumlah_domain * 100
+                        if jumlah_domain else 0
+                    )
                 })
 
+            # ------------------------------------------
+            # REKAPITULASI PER DOMAIN
+            # ------------------------------------------
+
             st.markdown("### Rekapitulasi per Domain")
+
             st.dataframe(
-                rekap,
+                pd.DataFrame(rekap)[
+                    ["Domain", "Ya", "Sebagian", "Tidak", "N/A"]
+                ],
                 hide_index=True,
                 use_container_width=True
             )
+
+            # ------------------------------------------
+            # GRAFIK PERSENTASE PER DOMAIN
+            # ------------------------------------------
+
+            st.markdown("### Grafik Persentase per Domain")
+
+            df_grafik = pd.DataFrame(rekap).set_index("Domain")
+
+            df_grafik = df_grafik[
+                [
+                    "Persentase Ya",
+                    "Persentase Sebagian",
+                    "Persentase Tidak",
+                    "Persentase N/A"
+                ]
+            ]
+
+            df_grafik.columns = [
+                "Ya",
+                "Sebagian",
+                "Tidak",
+                "N/A"
+            ]
+
+            st.bar_chart(
+                df_grafik,
+                height=350
+            )
+
+            st.caption(
+                "Grafik menunjukkan persentase setiap jenis jawaban "
+                "pada masing-masing domain."
+            )
+
+            # ------------------------------------------
+            # TOTAL JAWABAN
+            # ------------------------------------------
 
             total_ya = sum(item["Ya"] for item in rekap)
             total_sebagian = sum(item["Sebagian"] for item in rekap)
             total_tidak = sum(item["Tidak"] for item in rekap)
             total_na = sum(item["N/A"] for item in rekap)
 
+            total_jawaban = (
+                total_ya +
+                total_sebagian +
+                total_tidak +
+                total_na
+            )
+
+            persen_ya = (
+                total_ya / total_jawaban * 100
+                if total_jawaban else 0
+            )
+
+            persen_sebagian = (
+                total_sebagian / total_jawaban * 100
+                if total_jawaban else 0
+            )
+
+            persen_tidak = (
+                total_tidak / total_jawaban * 100
+                if total_jawaban else 0
+            )
+
+            persen_na = (
+                total_na / total_jawaban * 100
+                if total_jawaban else 0
+            )
+
             st.markdown("### Total Jawaban")
+
             c1, c2, c3, c4 = st.columns(4)
 
             with c1:
-                st.metric("Ya", total_ya)
+                st.metric(
+                    "Ya",
+                    total_ya,
+                    f"{persen_ya:.1f}%"
+                )
+
             with c2:
-                st.metric("Sebagian", total_sebagian)
+                st.metric(
+                    "Sebagian",
+                    total_sebagian,
+                    f"{persen_sebagian:.1f}%"
+                )
+
             with c3:
-                st.metric("Tidak", total_tidak)
+                st.metric(
+                    "Tidak",
+                    total_tidak,
+                    f"{persen_tidak:.1f}%"
+                )
+
             with c4:
-                st.metric("N/A", total_na)
+                st.metric(
+                    "N/A",
+                    total_na,
+                    f"{persen_na:.1f}%"
+                )
+
+            # ------------------------------------------
+            # PERSENTASE KESELURUHAN
+            # ------------------------------------------
+
+            st.markdown("### Persentase Total Hasil Audit")
+
+            daftar_persentase = [
+                ("Ya", persen_ya),
+                ("Sebagian", persen_sebagian),
+                ("Tidak", persen_tidak),
+                ("N/A", persen_na)
+            ]
+
+            for label, nilai in daftar_persentase:
+                st.write(f"**{label}: {nilai:.1f}%**")
+                st.progress(int(round(nilai)))
+
+            # ------------------------------------------
+            # DETAIL JAWABAN
+            # ------------------------------------------
 
             st.markdown("### Detail Jawaban")
 
             for kode_domain in daftar_domain:
                 with st.expander(f"Detail Domain {kode_domain}"):
+
                     for item in data["jawaban"]:
                         if item["domain"] == kode_domain:
+
                             st.markdown(
-                                f"**Pertanyaan {item['nomor']} - {item['kode']}**"
+                                f"**Pertanyaan {item['nomor']} - "
+                                f"{item['kode']}**"
                             )
+
                             st.write(item["pertanyaan"])
-                            st.write(f"Jawaban: {item['jawaban']}")
-                            st.write(f"Bukti Pendukung: {item['bukti'] or '-'}")
-                            st.write(f"Catatan Auditor: {item['catatan'] or '-'}")
+                            st.write(
+                                f"Jawaban: {item['jawaban']}"
+                            )
+
+                            st.write(
+                                f"Bukti Pendukung: {item['bukti'] or '-'}"
+                            )
+
+                            st.write(
+                                f"Catatan Auditor: {item['catatan'] or '-'}"
+                            )
+
                             st.divider()
 
 
@@ -449,6 +637,7 @@ elif st.session_state.menu == "Hasil Audit":
 
 elif st.session_state.menu == "Rekomendasi":
     st.title("Rekomendasi Perbaikan")
+
     st.write(
         "Rekomendasi awal untuk meningkatkan pengelolaan "
         "Aplikasi Persediaan dan Penjualan."
@@ -456,27 +645,33 @@ elif st.session_state.menu == "Rekomendasi":
 
     tampilkan_card(
         "Pengelolaan Persediaan",
-        "Melakukan pembaruan data stok secara berkala, menerapkan stok opname, dan memastikan setiap barang masuk serta keluar tercatat."
+        "Melakukan pembaruan data stok secara berkala, "
+        "menerapkan stok opname, dan memastikan setiap barang "
+        "masuk serta keluar tercatat."
     )
 
     tampilkan_card(
         "Transaksi Penjualan",
-        "Memastikan setiap transaksi penjualan tercatat secara lengkap, akurat, dan memiliki bukti transaksi."
+        "Memastikan setiap transaksi penjualan tercatat "
+        "secara lengkap, akurat, dan memiliki bukti transaksi."
     )
 
     tampilkan_card(
         "Keamanan Sistem",
-        "Menerapkan pembatasan hak akses pengguna sesuai tanggung jawab masing-masing."
+        "Menerapkan pembatasan hak akses pengguna "
+        "sesuai tanggung jawab masing-masing."
     )
 
     tampilkan_card(
         "Pencadangan Data",
-        "Melakukan pencadangan data persediaan dan penjualan secara berkala serta menguji pemulihan data."
+        "Melakukan pencadangan data persediaan dan penjualan "
+        "secara berkala serta menguji pemulihan data."
     )
 
     tampilkan_card(
         "Pengawasan dan Pelaporan",
-        "Melakukan evaluasi berkala terhadap laporan persediaan, penjualan, dan hasil pemeriksaan."
+        "Melakukan evaluasi berkala terhadap laporan "
+        "persediaan, penjualan, dan hasil pemeriksaan."
     )
 
 
