@@ -1,9 +1,9 @@
 
 import streamlit as st
 
-# ==========================================
-# 1. KONFIGURASI HALAMAN
-# ==========================================
+# ==================================================
+# 1. KONFIGURASI
+# ==================================================
 
 st.set_page_config(
     page_title="Sistem Audit COBIT 5",
@@ -11,9 +11,87 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ==========================================
-# 2. DESAIN WEBSITE
-# ==========================================
+# ==================================================
+# 2. DATA PERTANYAAN AUDIT SESUAI PDF
+# ==================================================
+
+daftar_domain = {
+    "EDM": {
+        "nama": "Evaluate, Direct and Monitor",
+        "pertanyaan": [
+            ("EDM01", "Apakah pimpinan melakukan evaluasi berkala terhadap proses pencatatan persediaan barang dagang dan penjualan?"),
+            ("EDM01", "Apakah peran, tanggung jawab, dan wewenang pengambilan keputusan atas data stok dan penjualan (pimpinan, gudang, penjualan, keuangan) telah ditetapkan secara tertulis?"),
+            ("EDM02", "Apakah pimpinan mengevaluasi manfaat informasi bagi usaha, misalnya ketersediaan stok untuk memenuhi pesanan pada musim pembangunan dan berkurangnya barang kosong atau barang lambat laku?"),
+            ("EDM03", "Apakah pimpinan telah menetapkan batas risiko yang dapat diterima, misalnya untuk selisih stok, barang rusak atau hilang, dan kebocoran data harga atau data pelanggan?"),
+            ("EDM04", "Apakah pimpinan menyediakan sumber daya yang memadai (pegawai, anggaran, dan sarana pencatatan) untuk pengelolaan data persediaan dan penjualan?"),
+            ("EDM05", "Apakah laporan persediaan dan penjualan disampaikan secara berkala kepada pimpinan?")
+        ]
+    },
+
+    "APO": {
+        "nama": "Align, Plan and Organise",
+        "pertanyaan": [
+            ("APO01", "Apakah perusahaan memiliki prosedur tertulis (SOP) untuk penerimaan dan pengeluaran barang di gudang, stok opname, dan penjualan?"),
+            ("APO01", "Apakah prosedur tersebut telah disosialisasikan kepada bagian gudang, penjualan, dan keuangan?"),
+            ("APO02", "Apakah target penjualan dan kebutuhan stok barang dagang disusun berdasarkan data stok dan pola penjualan, serta dimuat dalam rencana kerja dan anggaran tahunan?"),
+            ("APO07", "Apakah pegawai yang mengelola data stok dan penjualan memperoleh pelatihan atau pembekalan yang sesuai dengan tugasnya?"),
+            ("APO12", "Apakah risiko pada proses ini telah diidentifikasi dan didokumentasikan, misalnya selisih stok, barang rusak atau hilang, kesalahan harga, pesanan yang tidak terpenuhi, dan kesalahan pencatatan?"),
+            ("APO13", "Apakah terdapat kebijakan tertulis tentang keamanan informasi yang mencakup data harga, data pelanggan dan mitra penjual, serta data keuangan?")
+        ]
+    },
+
+    "BAI": {
+        "nama": "Build, Acquire and Implement",
+        "pertanyaan": [
+            ("BAI02", "Apakah kebutuhan informasi dari bagian gudang, penjualan, dan keuangan telah diidentifikasi dan didokumentasikan?"),
+            ("BAI04", "Apakah perusahaan memeriksa kecukupan kapasitas sarana pencatatan terhadap volume stok dan transaksi penjualan, terutama pada masa permintaan tinggi?"),
+            ("BAI06", "Apakah setiap perubahan pada sarana pencatatan (format pencatatan, aplikasi, atau daftar harga) disetujui pihak berwenang dan dicatat?"),
+            ("BAI07", "Apakah sistem, aplikasi, atau perubahan pada aplikasi atau spreadsheet pencatatan stok dan penjualan diuji sebelum digunakan, dan data lama dipindahkan dengan benar?"),
+            ("BAI08", "Apakah tersedia panduan atau dokumentasi kerja sehingga pencatatan tidak bergantung pada satu orang saja?"),
+            ("BAI09", "Apakah aset pendukung (komputer, timbangan, printer label, perangkat gudang) telah dicatat dan dipelihara secara berkala?")
+        ]
+    },
+
+    "DSS": {
+        "nama": "Deliver, Service and Support",
+        "pertanyaan": [
+            ("DSS01", "Apakah penerimaan barang dari pemasok, serta barang keluar gudang untuk penjualan, dicatat tepat waktu sesuai prosedur?"),
+            ("DSS02", "Apakah gangguan atau kesalahan pencatatan (misalnya aplikasi error atau selisih data) dicatat, ditangani, dan memiliki penanggung jawab?"),
+            ("DSS04", "Apakah data persediaan dan penjualan dicadangkan secara berkala dan pernah diuji pemulihannya?"),
+            ("DSS05", "Apakah hak akses ke data dan dokumen (termasuk harga, data pelanggan, dan data keuangan) diberikan sesuai tugas dan dicabut ketika pegawai berpindah atau keluar?"),
+            ("DSS06", "Apakah tugas penerimaan barang, penyimpanan, pencatatan stok, penjualan, dan penerimaan pembayaran dipisahkan sehingga tidak dikuasai satu orang?"),
+            ("DSS06", "Apakah setiap barang memiliki kode dan satuan yang konsisten, dan setiap barang keluar dicatat dengan nomor faktur atau surat jalan sehingga dapat ditelusuri apabila ada selisih atau keluhan pelanggan?")
+        ]
+    },
+
+    "MEA": {
+        "nama": "Monitor, Evaluate and Assess",
+        "pertanyaan": [
+            ("MEA01", "Apakah perusahaan menetapkan indikator kinerja, misalnya akurasi stok dan frekuensi barang kosong, serta memantaunya?"),
+            ("MEA01", "Apakah realisasi penjualan dibandingkan dengan target dan data stok, dan selisihnya dianalisis?"),
+            ("MEA02", "Apakah stok opname barang dagang dilakukan secara berkala dan selisihnya diselidiki serta disesuaikan dengan persetujuan?"),
+            ("MEA02", "Apakah terdapat fungsi pengawas atau pemeriksaan internal yang menilai pengendalian pada proses persediaan dan penjualan?"),
+            ("MEA02", "Apakah temuan pemeriksaan dan keluhan pelanggan ditindaklanjuti dan statusnya dipantau sampai selesai?"),
+            ("MEA03", "Apakah perusahaan memantau kepatuhan terhadap ketentuan eksternal, misalnya perizinan usaha, perpajakan, dan ketentuan perlindungan konsumen?")
+        ]
+    }
+}
+
+pilihan_jawaban = ["Ya", "Sebagian", "Tidak", "N/A"]
+
+# ==================================================
+# 3. SESSION STATE
+# ==================================================
+
+if "menu" not in st.session_state:
+    st.session_state.menu = "Dashboard"
+
+if "hasil_audit" not in st.session_state:
+    st.session_state.hasil_audit = []
+
+# ==================================================
+# 4. DESAIN WEBSITE
+# ==================================================
 
 st.markdown("""
 <style>
@@ -45,7 +123,6 @@ html, body, [class*="css"] {
     padding-bottom: 3rem;
 }
 
-/* Sidebar */
 [data-testid="stSidebar"] {
     background: linear-gradient(
         180deg,
@@ -54,25 +131,21 @@ html, body, [class*="css"] {
     );
 }
 
-/* Judul */
 h1, h2, h3, h4 {
     color: #90566F;
     font-family: 'Poppins', sans-serif;
 }
 
-/* Teks */
-p, label, li {
+p, label {
     color: #80586B;
 }
 
-/* Card informasi */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    background-color: rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.65);
     border-color: #F2C6D6;
-    border-radius: 15px;
+    border-radius: 14px;
 }
 
-/* Tombol */
 .stButton > button {
     background-color: #DFA6BC;
     color: white;
@@ -87,7 +160,6 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     border: none;
 }
 
-/* Input */
 .stTextInput input,
 .stTextArea textarea {
     border-radius: 9px;
@@ -99,32 +171,19 @@ hr {
 </style>
 """, unsafe_allow_html=True)
 
-
-# ==========================================
-# 3. SESSION STATE
-# ==========================================
-
-if "menu" not in st.session_state:
-    st.session_state.menu = "Dashboard"
-
-if "hasil_kuesioner" not in st.session_state:
-    st.session_state.hasil_kuesioner = []
-
-
-# ==========================================
-# 4. FUNGSI CARD
-# ==========================================
+# ==================================================
+# 5. FUNGSI CARD
+# ==================================================
 
 def tampilkan_card(judul, deskripsi):
-
     with st.container(border=True):
         st.subheader(judul)
         st.write(deskripsi)
 
 
-# ==========================================
-# 5. SIDEBAR
-# ==========================================
+# ==================================================
+# 6. SIDEBAR
+# ==================================================
 
 with st.sidebar:
 
@@ -133,7 +192,7 @@ with st.sidebar:
 
     st.divider()
 
-    daftar_menu = [
+    menu_list = [
         "Dashboard",
         "Profil Perusahaan",
         "Kuesioner Audit",
@@ -141,8 +200,7 @@ with st.sidebar:
         "Rekomendasi"
     ]
 
-    for item in daftar_menu:
-
+    for item in menu_list:
         if st.button(
             item,
             key="menu_" + item,
@@ -152,13 +210,12 @@ with st.sidebar:
             st.rerun()
 
     st.divider()
-
     st.caption("Sistem Audit Berbasis COBIT 5")
 
 
-# ==========================================
-# 6. DASHBOARD
-# ==========================================
+# ==================================================
+# 7. DASHBOARD
+# ==================================================
 
 if st.session_state.menu == "Dashboard":
 
@@ -170,25 +227,23 @@ if st.session_state.menu == "Dashboard":
 
     st.divider()
 
-    # Ringkasan informasi
-    kolom1, kolom2, kolom3 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
 
-    with kolom1:
+    with col1:
         with st.container(border=True):
             st.caption("Standar Audit")
             st.subheader("COBIT 5")
 
-    with kolom2:
+    with col2:
         with st.container(border=True):
             st.caption("Objek Evaluasi")
             st.subheader("Aplikasi")
 
-    with kolom3:
+    with col3:
         with st.container(border=True):
-            st.caption("Metode Evaluasi")
-            st.subheader("Kuesioner")
+            st.caption("Jumlah Pertanyaan")
+            st.subheader("30 Pertanyaan")
 
-    # Objek Audit
     st.markdown("### Objek Audit")
 
     with st.container(border=True):
@@ -196,10 +251,7 @@ if st.session_state.menu == "Dashboard":
         st.subheader("PT Muria Bangun Mandiri")
 
         st.markdown("**Objek evaluasi:**")
-
-        st.write(
-            "Aplikasi Persediaan dan Penjualan."
-        )
+        st.write("Aplikasi Persediaan dan Penjualan.")
 
         st.markdown("**Fokus evaluasi:**")
 
@@ -210,46 +262,35 @@ if st.session_state.menu == "Dashboard":
         - Ketepatan informasi dan pelaporan.
         """)
 
-    # Domain COBIT
     st.markdown("### Domain COBIT 5")
 
     st.write(
-        "Lima domain yang menjadi dasar evaluasi tata kelola teknologi informasi."
+        "Evaluasi dilakukan berdasarkan lima domain COBIT 5."
     )
 
-    kolom1, kolom2, kolom3 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
 
-    with kolom1:
-        with st.container(border=True):
-            st.subheader("EDM")
-            st.caption("Evaluate, Direct and Monitor")
+    with col1:
+        tampilkan_card("EDM", "Evaluate, Direct and Monitor")
 
-    with kolom2:
-        with st.container(border=True):
-            st.subheader("APO")
-            st.caption("Align, Plan and Organize")
+    with col2:
+        tampilkan_card("APO", "Align, Plan and Organise")
 
-    with kolom3:
-        with st.container(border=True):
-            st.subheader("BAI")
-            st.caption("Build, Acquire and Implement")
+    with col3:
+        tampilkan_card("BAI", "Build, Acquire and Implement")
 
-    kolom4, kolom5 = st.columns(2)
+    col4, col5 = st.columns(2)
 
-    with kolom4:
-        with st.container(border=True):
-            st.subheader("DSS")
-            st.caption("Deliver, Service and Support")
+    with col4:
+        tampilkan_card("DSS", "Deliver, Service and Support")
 
-    with kolom5:
-        with st.container(border=True):
-            st.subheader("MEA")
-            st.caption("Monitor, Evaluate and Assess")
+    with col5:
+        tampilkan_card("MEA", "Monitor, Evaluate and Assess")
 
 
-# ==========================================
-# 7. PROFIL PERUSAHAAN
-# ==========================================
+# ==================================================
+# 8. PROFIL PERUSAHAAN
+# ==================================================
 
 elif st.session_state.menu == "Profil Perusahaan":
 
@@ -261,206 +302,329 @@ elif st.session_state.menu == "Profil Perusahaan":
 
     tampilkan_card(
         "PT Muria Bangun Mandiri",
-        "Perusahaan yang menjadi objek evaluasi tata kelola teknologi informasi menggunakan kerangka kerja COBIT 5."
+        "PT Muria Bangun Mandiri merupakan objek evaluasi tata kelola teknologi informasi menggunakan kerangka kerja COBIT 5."
     )
 
     st.markdown("### Informasi Objek Audit")
 
-    kolom1, kolom2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-    with kolom1:
+    with col1:
         tampilkan_card(
             "Nama Perusahaan",
             "PT Muria Bangun Mandiri"
         )
 
-    with kolom2:
+    with col2:
         tampilkan_card(
             "Sistem yang Dievaluasi",
             "Aplikasi Persediaan dan Penjualan"
         )
 
 
-# ==========================================
-# 8. KUESIONER AUDIT
-# ==========================================
+# ==================================================
+# 9. KUESIONER AUDIT - 30 PERTANYAAN
+# ==================================================
 
 elif st.session_state.menu == "Kuesioner Audit":
 
-    st.title("Kuesioner Audit")
+    st.title("Kuesioner Audit COBIT 5")
 
     st.write(
-        "Pengisian kuesioner evaluasi Aplikasi Persediaan dan Penjualan."
+        "Form Audit Sistem Informasi Persediaan dan Penjualan "
+        "PT Muria Bangun Mandiri."
     )
 
-    tampilkan_card(
-        "Petunjuk Pengisian",
-        "Isi identitas responden dan pilih jawaban yang sesuai dengan kondisi penggunaan aplikasi."
+    st.info(
+        "Terdapat 30 pertanyaan yang terbagi ke dalam lima domain COBIT 5. "
+        "Pilih jawaban berdasarkan hasil pemeriksaan dan bukti yang tersedia."
     )
 
-    st.markdown("### Identitas Responden")
+    with st.form("form_audit"):
 
-    nama = st.text_input("Nama Responden")
-    jabatan = st.text_input("Jabatan")
+        st.markdown("### Identitas Audit")
 
-    st.markdown("### Pertanyaan Audit")
+        nama_auditor = st.text_input("Nama Auditor")
+        nama_responden = st.text_input("Nama Responden")
+        bagian = st.text_input("Bagian / Unit Kerja")
 
-    pertanyaan = [
-        "Data persediaan dikelola dengan baik.",
-        "Transaksi penjualan dicatat secara akurat.",
-        "Sistem memiliki pengamanan akses pengguna.",
-        "Informasi yang dihasilkan sesuai kebutuhan.",
-        "Laporan penjualan dapat diakses dengan mudah."
-    ]
+        st.divider()
 
-    pilihan = [
-        "Sangat Tidak Setuju",
-        "Tidak Setuju",
-        "Netral",
-        "Setuju",
-        "Sangat Setuju"
-    ]
+        jawaban_audit = []
+        nomor = 1
 
-    jawaban_responden = []
+        for kode_domain, data_domain in daftar_domain.items():
 
-    for nomor, soal in enumerate(pertanyaan, start=1):
+            st.markdown(
+                f"## {kode_domain} - {data_domain['nama']}"
+            )
 
-        st.markdown(f"**{nomor}. {soal}**")
+            st.caption("6 pertanyaan audit")
 
-        jawaban = st.radio(
-            "Pilih jawaban:",
-            pilihan,
-            key=f"jawaban_{nomor}",
-            horizontal=True
+            for kode_proses, pertanyaan in data_domain["pertanyaan"]:
+
+                st.markdown(
+                    f"**Pertanyaan {nomor} | {kode_proses}**"
+                )
+
+                st.write(pertanyaan)
+
+                jawaban = st.selectbox(
+                    "Jawaban",
+                    pilihan_jawaban,
+                    key=f"jawaban_{nomor}"
+                )
+
+                bukti = st.text_input(
+                    "Bukti Pendukung",
+                    key=f"bukti_{nomor}",
+                    placeholder="Masukkan dokumen, catatan, atau bukti pemeriksaan"
+                )
+
+                catatan = st.text_area(
+                    "Catatan Auditor",
+                    key=f"catatan_{nomor}",
+                    placeholder="Tuliskan hasil pemeriksaan",
+                    key=None if False else f"catatan_area_{nomor}",
+                    height=80
+                )
+
+                jawaban_audit.append({
+                    "nomor": nomor,
+                    "domain": kode_domain,
+                    "kode": kode_proses,
+                    "pertanyaan": pertanyaan,
+                    "jawaban": jawaban,
+                    "bukti": bukti,
+                    "catatan": catatan
+                })
+
+                st.divider()
+
+                nomor += 1
+
+        simpan = st.form_submit_button(
+            "Simpan Hasil Audit",
+            use_container_width=True
         )
 
-        jawaban_responden.append(jawaban)
+    if simpan:
 
-    if st.button("Simpan Jawaban"):
-
-        if not nama.strip() or not jabatan.strip():
-
+        if not nama_auditor.strip() or not nama_responden.strip():
             st.warning(
-                "Nama dan jabatan responden harus diisi."
+                "Nama auditor dan nama responden wajib diisi."
             )
 
-        elif nama.strip() and jabatan.strip():
+        else:
 
-            st.session_state.hasil_kuesioner.append({
-                "nama": nama,
-                "jabatan": jabatan,
-                "jawaban": jawaban_responden
-            })
+            data_baru = {
+                "nama_auditor": nama_auditor,
+                "nama_responden": nama_responden,
+                "bagian": bagian,
+                "jawaban": jawaban_audit
+            }
+
+            st.session_state.hasil_audit.append(data_baru)
 
             st.success(
-                "Jawaban berhasil disimpan dalam sesi aplikasi."
+                "30 jawaban audit berhasil disimpan dalam sesi aplikasi."
             )
 
 
-# ==========================================
-# 9. HASIL AUDIT
-# ==========================================
+# ==================================================
+# 10. HASIL AUDIT
+# ==================================================
 
 elif st.session_state.menu == "Hasil Audit":
 
     st.title("Hasil Audit")
 
     st.write(
-        "Ringkasan hasil pengisian kuesioner."
+        "Rekapitulasi jawaban audit berdasarkan lima domain COBIT 5."
     )
 
-    jumlah = len(
-        st.session_state.hasil_kuesioner
-    )
+    if len(st.session_state.hasil_audit) == 0:
 
-    kolom1, kolom2 = st.columns(2)
-
-    with kolom1:
-        with st.container(border=True):
-            st.caption("Jumlah Responden")
-            st.subheader(str(jumlah))
-
-    with kolom2:
-        with st.container(border=True):
-            st.caption("Status Pengisian")
-            st.subheader(
-                "Sudah Ada Data" if jumlah > 0 else "Belum Ada Data"
-            )
-
-    st.markdown("### Data Responden")
-
-    if jumlah > 0:
-
-        for nomor, data in enumerate(
-            st.session_state.hasil_kuesioner,
-            start=1
-        ):
-
-            with st.expander(
-                f"Responden {nomor}: {data['nama']}"
-            ):
-
-                st.write("Jabatan:", data["jabatan"])
-
-                for i, jawaban in enumerate(
-                    data["jawaban"],
-                    start=1
-                ):
-                    st.write(
-                        f"Pertanyaan {i}: {jawaban}"
-                    )
+        st.info(
+            "Belum ada data audit. Silakan isi kuesioner terlebih dahulu."
+        )
 
     else:
 
-        st.info(
-            "Belum ada jawaban kuesioner yang tersimpan."
-        )
+        for nomor_audit, data in enumerate(
+            st.session_state.hasil_audit,
+            start=1
+        ):
+
+            st.markdown(f"## Hasil Audit {nomor_audit}")
+
+            st.write(
+                f"**Auditor:** {data['nama_auditor']}"
+            )
+
+            st.write(
+                f"**Responden:** {data['nama_responden']}"
+            )
+
+            st.write(
+                f"**Bagian:** {data['bagian']}"
+            )
+
+            rekap = []
+
+            for kode_domain, domain in daftar_domain.items():
+
+                jawaban_domain = [
+                    item for item in data["jawaban"]
+                    if item["domain"] == kode_domain
+                ]
+
+                jumlah_ya = sum(
+                    item["jawaban"] == "Ya"
+                    for item in jawaban_domain
+                )
+
+                jumlah_sebagian = sum(
+                    item["jawaban"] == "Sebagian"
+                    for item in jawaban_domain
+                )
+
+                jumlah_tidak = sum(
+                    item["jawaban"] == "Tidak"
+                    for item in jawaban_domain
+                )
+
+                jumlah_na = sum(
+                    item["jawaban"] == "N/A"
+                    for item in jawaban_domain
+                )
+
+                rekap.append({
+                    "Domain": kode_domain,
+                    "Ya": jumlah_ya,
+                    "Sebagian": jumlah_sebagian,
+                    "Tidak": jumlah_tidak,
+                    "N/A": jumlah_na
+                })
+
+            st.markdown("### Rekapitulasi per Domain")
+
+            st.dataframe(
+                rekap,
+                hide_index=True,
+                use_container_width=True
+            )
+
+            total_ya = sum(x["Ya"] for x in rekap)
+            total_sebagian = sum(x["Sebagian"] for x in rekap)
+            total_tidak = sum(x["Tidak"] for x in rekap)
+            total_na = sum(x["N/A"] for x in rekap)
+
+            st.markdown("### Total Jawaban")
+
+            c1, c2, c3, c4 = st.columns(4)
+
+            with c1:
+                st.metric("Ya", total_ya)
+
+            with c2:
+                st.metric("Sebagian", total_sebagian)
+
+            with c3:
+                st.metric("Tidak", total_tidak)
+
+            with c4:
+                st.metric("N/A", total_na)
+
+            st.markdown("### Detail Jawaban")
+
+            for kode_domain in daftar_domain:
+
+                with st.expander(
+                    f"Detail Domain {kode_domain}"
+                ):
+
+                    for item in data["jawaban"]:
+
+                        if item["domain"] == kode_domain:
+
+                            st.markdown(
+                                f"**Pertanyaan {item['nomor']} - {item['kode']}**"
+                            )
+
+                            st.write(item["pertanyaan"])
+
+                            st.write(
+                                f"Jawaban: {item['jawaban']}"
+                            )
+
+                            st.write(
+                                f"Bukti Pendukung: {item['bukti'] or '-'}"
+                            )
+
+                            st.write(
+                                f"Catatan Auditor: {item['catatan'] or '-'}"
+                            )
+
+                            st.divider()
 
 
-# ==========================================
-# 10. REKOMENDASI
-# ==========================================
+# ==================================================
+# 11. REKOMENDASI
+# ==================================================
 
 elif st.session_state.menu == "Rekomendasi":
 
     st.title("Rekomendasi Perbaikan")
 
     st.write(
-        "Fokus rekomendasi untuk meningkatkan kualitas sistem."
+        "Rekomendasi awal untuk meningkatkan pengelolaan "
+        "Aplikasi Persediaan dan Penjualan."
     )
 
     tampilkan_card(
         "Pengelolaan Persediaan",
-        "Meningkatkan ketepatan pencatatan stok dan melakukan pembaruan data persediaan secara berkala."
+        "Melakukan pembaruan data stok secara berkala, menerapkan stok opname, dan memastikan setiap barang masuk serta keluar tercatat."
     )
 
     tampilkan_card(
         "Transaksi Penjualan",
-        "Memastikan setiap transaksi penjualan tercatat secara lengkap, akurat, dan terdokumentasi."
+        "Memastikan setiap transaksi penjualan tercatat secara lengkap, akurat, dan memiliki bukti transaksi."
     )
 
     tampilkan_card(
         "Keamanan Sistem",
-        "Menerapkan pengaturan hak akses pengguna dan perlindungan terhadap data perusahaan."
+        "Menerapkan pembatasan hak akses pengguna sesuai tanggung jawab masing-masing."
     )
 
     tampilkan_card(
-        "Pelaporan",
-        "Meningkatkan kualitas laporan agar informasi yang dihasilkan akurat dan mudah dipahami."
+        "Pencadangan Data",
+        "Melakukan pencadangan data persediaan dan penjualan secara berkala serta menguji pemulihan data."
+    )
+
+    tampilkan_card(
+        "Pengawasan dan Pelaporan",
+        "Melakukan evaluasi berkala terhadap laporan persediaan, penjualan, dan hasil pemeriksaan."
     )
 
 
-# ==========================================
-# 11. FOOTER
-# ==========================================
+# ==================================================
+# 12. FOOTER
+# ==================================================
 
 st.divider()
 
 st.markdown(
-    "<p style='text-align:center; color:#A77B8E; font-size:12px;'>"
-    "Sistem Audit COBIT 5<br>"
-    "Aplikasi Persediaan dan Penjualan<br>"
-    "PT Muria Bangun Mandiri"
-    "</p>",
+    """
+    <p style="
+        text-align: center;
+        color: #A77B8E;
+        font-size: 12px;
+    ">
+        Sistem Audit COBIT 5<br>
+        Aplikasi Persediaan dan Penjualan<br>
+        PT Muria Bangun Mandiri
+    </p>
+    """,
     unsafe_allow_html=True
 )
