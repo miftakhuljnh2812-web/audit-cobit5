@@ -241,9 +241,7 @@ def hitung_rekap(data):
         )
 
         jumlah_dinilai = (
-            jumlah_ya +
-            jumlah_sebagian +
-            jumlah_tidak
+            jumlah_ya + jumlah_sebagian + jumlah_tidak
         )
 
         rekap.append({
@@ -282,9 +280,7 @@ def buat_excel_audit(data, nomor_audit, rekap):
 
     output = BytesIO()
 
-    # ----------------------------------------------
-    # SHEET 1: IDENTITAS AUDIT
-    # ----------------------------------------------
+    # SHEET 1: IDENTITAS AUDIT DAN CATATAN
 
     identitas = pd.DataFrame({
         "Keterangan": [
@@ -294,7 +290,9 @@ def buat_excel_audit(data, nomor_audit, rekap):
             "Bagian / Unit Kerja",
             "Nama Perusahaan",
             "Objek Audit",
-            "Tanggal Ekspor"
+            "Tanggal Ekspor",
+            "Bukti Pendukung",
+            "Catatan Auditor"
         ],
 
         "Informasi": [
@@ -304,13 +302,13 @@ def buat_excel_audit(data, nomor_audit, rekap):
             data["bagian"] or "-",
             "PT Muria Bangun Mandiri",
             "Aplikasi Persediaan dan Penjualan",
-            datetime.now().strftime("%d-%m-%Y %H:%M")
+            datetime.now().strftime("%d-%m-%Y %H:%M"),
+            data["bukti_pendukung"] or "-",
+            data["catatan_auditor"] or "-"
         ]
     })
 
-    # ----------------------------------------------
     # SHEET 2: DETAIL JAWABAN
-    # ----------------------------------------------
 
     detail = []
 
@@ -322,16 +320,12 @@ def buat_excel_audit(data, nomor_audit, rekap):
             "Nama Domain": daftar_domain[item["domain"]]["nama"],
             "Kode Proses COBIT 5": item["kode"],
             "Pertanyaan Audit": item["pertanyaan"],
-            "Jawaban": item["jawaban"],
-            "Bukti Pendukung": item["bukti"] or "-",
-            "Catatan Auditor": item["catatan"] or "-"
+            "Jawaban": item["jawaban"]
         })
 
     df_detail = pd.DataFrame(detail)
 
-    # ----------------------------------------------
-    # SHEET 3: REKAPITULASI DOMAIN
-    # ----------------------------------------------
+    # SHEET 3: REKAPITULASI
 
     df_rekap = pd.DataFrame(rekap)
 
@@ -349,10 +343,6 @@ def buat_excel_audit(data, nomor_audit, rekap):
     ]
 
     df_rekap = df_rekap[kolom_rekap]
-
-    # ----------------------------------------------
-    # MEMBUAT FILE EXCEL
-    # ----------------------------------------------
 
     with pd.ExcelWriter(
         output,
@@ -380,12 +370,8 @@ def buat_excel_audit(data, nomor_audit, rekap):
             startrow=2
         )
 
-        # ------------------------------------------
-        # FORMAT SEMUA SHEET
-        # ------------------------------------------
-
         judul_sheet = {
-            "Identitas Audit": "IDENTITAS AUDIT COBIT 5",
+            "Identitas Audit": "IDENTITAS DAN CATATAN AUDIT COBIT 5",
             "Detail Jawaban": "DETAIL JAWABAN AUDIT COBIT 5",
             "Rekapitulasi": "REKAPITULASI HASIL AUDIT COBIT 5"
         }
@@ -404,7 +390,6 @@ def buat_excel_audit(data, nomor_audit, rekap):
             )
 
             cell_judul = ws.cell(row=1, column=1)
-
             cell_judul.value = judul
 
             cell_judul.font = Font(
@@ -426,6 +411,7 @@ def buat_excel_audit(data, nomor_audit, rekap):
             ws.row_dimensions[1].height = 30
 
             # Format header
+
             for cell in ws[3]:
 
                 cell.font = Font(
@@ -444,7 +430,8 @@ def buat_excel_audit(data, nomor_audit, rekap):
                     wrap_text=True
                 )
 
-            # Format isi tabel
+            # Format isi
+
             for row in ws.iter_rows(
                 min_row=4,
                 max_row=ws.max_row
@@ -465,6 +452,7 @@ def buat_excel_audit(data, nomor_audit, rekap):
                     )
 
             # Lebar kolom
+
             for column in ws.columns:
 
                 max_length = 0
@@ -476,7 +464,6 @@ def buat_excel_audit(data, nomor_audit, rekap):
                 for cell in column:
 
                     if cell.value is not None:
-
                         max_length = max(
                             max_length,
                             len(str(cell.value))
@@ -498,7 +485,8 @@ def buat_excel_audit(data, nomor_audit, rekap):
                     f"{ws.max_row}"
                 )
 
-        # Format angka persentase
+        # Format persentase
+
         ws_rekap = writer.sheets["Rekapitulasi"]
 
         for baris in range(4, 9):
@@ -508,6 +496,13 @@ def buat_excel_audit(data, nomor_audit, rekap):
                 ws_rekap[
                     f"{kolom}{baris}"
                 ].number_format = '0.00"%"'
+
+        # Perlebar kolom bukti dan catatan
+
+        ws_identitas = writer.sheets["Identitas Audit"]
+
+        ws_identitas.column_dimensions["A"].width = 25
+        ws_identitas.column_dimensions["B"].width = 70
 
     output.seek(0)
 
@@ -544,7 +539,6 @@ with st.sidebar:
             st.rerun()
 
     st.divider()
-
     st.caption("Sistem Audit Berbasis COBIT 5")
 
 
@@ -589,7 +583,6 @@ if st.session_state.menu == "Dashboard":
         st.subheader("PT Muria Bangun Mandiri")
 
         st.markdown("**Objek evaluasi:**")
-
         st.write("Aplikasi Persediaan dan Penjualan.")
 
         st.markdown("**Fokus evaluasi:**")
@@ -660,14 +653,12 @@ elif st.session_state.menu == "Profil Perusahaan":
     col1, col2 = st.columns(2)
 
     with col1:
-
         tampilkan_card(
             "Nama Perusahaan",
             "PT Muria Bangun Mandiri"
         )
 
     with col2:
-
         tampilkan_card(
             "Sistem yang Dievaluasi",
             "Aplikasi Persediaan dan Penjualan"
@@ -689,10 +680,12 @@ elif st.session_state.menu == "Kuesioner Audit":
 
     st.info(
         "Terdapat 30 pertanyaan yang terbagi ke dalam lima domain COBIT 5. "
-        "Pilih jawaban berdasarkan hasil pemeriksaan dan bukti yang tersedia."
+        "Isi jawaban berdasarkan kondisi dan bukti yang tersedia."
     )
 
     with st.form("form_audit"):
+
+        # IDENTITAS AUDIT
 
         st.markdown("### Identitas Audit")
 
@@ -703,6 +696,8 @@ elif st.session_state.menu == "Kuesioner Audit":
         bagian = st.text_input("Bagian / Unit Kerja")
 
         st.divider()
+
+        # PERTANYAAN AUDIT
 
         jawaban_audit = []
 
@@ -731,41 +726,60 @@ elif st.session_state.menu == "Kuesioner Audit":
                     key=f"jawaban_{nomor}"
                 )
 
-                bukti = st.text_input(
-                    "Bukti Pendukung",
-                    key=f"bukti_{nomor}",
-                    placeholder="Masukkan dokumen, catatan, atau bukti pemeriksaan"
-                )
-
-                catatan = st.text_area(
-                    "Catatan Auditor",
-                    key=f"catatan_area_{nomor}",
-                    placeholder="Tuliskan hasil pemeriksaan",
-                    height=80
-                )
-
                 jawaban_audit.append({
                     "nomor": nomor,
                     "domain": kode_domain,
                     "kode": kode_proses,
                     "pertanyaan": pertanyaan,
-                    "jawaban": jawaban,
-                    "bukti": bukti,
-                    "catatan": catatan
+                    "jawaban": jawaban
                 })
 
                 st.divider()
 
                 nomor += 1
 
+        # BUKTI PENDUKUNG DAN CATATAN AUDITOR
+
+        st.markdown("## Bukti Pendukung")
+
+        bukti_pendukung = st.text_area(
+            "Bukti Pendukung",
+            placeholder=(
+                "Tuliskan bukti pendukung secara keseluruhan, "
+                "seperti dokumen, laporan, hasil observasi, "
+                "atau hasil wawancara."
+            ),
+            height=130,
+            key="bukti_pendukung"
+        )
+
+        st.markdown("## Catatan Auditor")
+
+        catatan_auditor = st.text_area(
+            "Catatan Auditor",
+            placeholder=(
+                "Tuliskan kesimpulan atau catatan umum "
+                "berdasarkan hasil pemeriksaan seluruh pertanyaan."
+            ),
+            height=130,
+            key="catatan_auditor"
+        )
+
+        st.divider()
+
         simpan = st.form_submit_button(
             "Simpan Hasil Audit",
             use_container_width=True
         )
 
+    # VALIDASI DAN PENYIMPANAN
+
     if simpan:
 
-        if not nama_auditor.strip() or not nama_responden.strip():
+        if (
+            not nama_auditor.strip()
+            or not nama_responden.strip()
+        ):
 
             st.warning(
                 "Nama auditor dan nama responden wajib diisi."
@@ -786,13 +800,15 @@ elif st.session_state.menu == "Kuesioner Audit":
                 "nama_auditor": nama_auditor.strip(),
                 "nama_responden": nama_responden.strip(),
                 "bagian": bagian.strip(),
-                "jawaban": jawaban_audit
+                "jawaban": jawaban_audit,
+                "bukti_pendukung": bukti_pendukung.strip(),
+                "catatan_auditor": catatan_auditor.strip()
             }
 
             st.session_state.hasil_audit.append(data_baru)
 
             st.success(
-                "30 jawaban audit berhasil disimpan dalam sesi aplikasi."
+                "Hasil audit berhasil disimpan."
             )
 
 
@@ -837,15 +853,11 @@ elif st.session_state.menu == "Hasil Audit":
                 f"**Bagian:** {data['bagian'] or '-'}"
             )
 
-            # ------------------------------------------
             # REKAPITULASI
-            # ------------------------------------------
 
             rekap = hitung_rekap(data)
 
-            # ------------------------------------------
             # DOWNLOAD EXCEL
-            # ------------------------------------------
 
             file_excel = buat_excel_audit(
                 data,
@@ -871,9 +883,7 @@ elif st.session_state.menu == "Hasil Audit":
 
             st.divider()
 
-            # ------------------------------------------
             # TABEL REKAPITULASI
-            # ------------------------------------------
 
             st.markdown("### Rekapitulasi per Domain")
 
@@ -893,9 +903,7 @@ elif st.session_state.menu == "Hasil Audit":
                 use_container_width=True
             )
 
-            # ------------------------------------------
-            # GRAFIK PERSENTASE
-            # ------------------------------------------
+            # GRAFIK
 
             st.markdown(
                 "### Grafik Persentase per Domain"
@@ -928,9 +936,7 @@ elif st.session_state.menu == "Hasil Audit":
                 "ke dalam penyebut persentase penilaian."
             )
 
-            # ------------------------------------------
             # TOTAL JAWABAN
-            # ------------------------------------------
 
             total_ya = sum(
                 item["Ya"] for item in rekap
@@ -980,7 +986,6 @@ elif st.session_state.menu == "Hasil Audit":
             c1, c2, c3, c4 = st.columns(4)
 
             with c1:
-
                 st.metric(
                     "Ya",
                     total_ya,
@@ -988,7 +993,6 @@ elif st.session_state.menu == "Hasil Audit":
                 )
 
             with c2:
-
                 st.metric(
                     "Sebagian",
                     total_sebagian,
@@ -996,7 +1000,6 @@ elif st.session_state.menu == "Hasil Audit":
                 )
 
             with c3:
-
                 st.metric(
                     "Tidak",
                     total_tidak,
@@ -1004,16 +1007,13 @@ elif st.session_state.menu == "Hasil Audit":
                 )
 
             with c4:
-
                 st.metric(
                     "N/A",
                     total_na,
                     f"{persen_na:.1f}%"
                 )
 
-            # ------------------------------------------
-            # PERSENTASE DISTRIBUSI JAWABAN
-            # ------------------------------------------
+            # DISTRIBUSI JAWABAN
 
             st.markdown(
                 "### Persentase Distribusi Jawaban"
@@ -1036,9 +1036,21 @@ elif st.session_state.menu == "Hasil Audit":
                     int(round(nilai))
                 )
 
-            # ------------------------------------------
+            # BUKTI PENDUKUNG DAN CATATAN AUDITOR
+
+            st.markdown("### Bukti Pendukung")
+
+            st.write(
+                data["bukti_pendukung"] or "Belum diisi."
+            )
+
+            st.markdown("### Catatan Auditor")
+
+            st.write(
+                data["catatan_auditor"] or "Belum diisi."
+            )
+
             # DETAIL JAWABAN
-            # ------------------------------------------
 
             st.markdown("### Detail Jawaban")
 
@@ -1057,20 +1069,10 @@ elif st.session_state.menu == "Hasil Audit":
                                 f"{item['kode']}**"
                             )
 
-                            st.write(
-                                item["pertanyaan"]
-                            )
+                            st.write(item["pertanyaan"])
 
                             st.write(
                                 f"Jawaban: {item['jawaban']}"
-                            )
-
-                            st.write(
-                                f"Bukti Pendukung: {item['bukti'] or '-'}"
-                            )
-
-                            st.write(
-                                f"Catatan Auditor: {item['catatan'] or '-'}"
                             )
 
                             st.divider()
